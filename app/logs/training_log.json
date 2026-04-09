@@ -1,0 +1,21 @@
+{
+  "training_started": "2026-04-07T18:04:28.752569",
+  "model_config": {
+    "model_name": "bert-base-uncased",
+    "max_length": 384,
+    "dropout_rate": 0.2
+  },
+  "hyperparameters": {
+    "learning_rate": 2e-05,
+    "batch_size": 8,
+    "total_epochs": 2
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "timestamp": "2026-04-07T18:04:28.753576",
+      "train_loss": 0.479125,
+      "val_loss": 0.484057,
+      "val_accuracy": 0.84,
+      "val_accuracy_percent": 84.0,
+      "is_best_model": 
