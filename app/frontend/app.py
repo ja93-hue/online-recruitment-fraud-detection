@@ -1,41 +1,20 @@
 ﻿"""
 =============================================================================
-Streamlit Frontend for Fake Job Detection
+Redesigned Streamlit Frontend for Fake Job Detection
 =============================================================================
-
-This module provides the web user interface for the fake job detection system.
-It uses Streamlit to create an interactive web application where users can:
-    - Paste job posting text
-    - Get quick predictions (legitimate or fraudulent)
-    - View detailed explanations with charts
-
-How to Run:
-    streamlit run frontend/app.py
-
-Requirements:
-    - Backend API must be running on localhost:5000
-    - See backend/api.py for starting the backend
-
-Author: ORFD Project Team
+New UI with History Page
 """
 
-# =============================================================================
-# IMPORTS
-# =============================================================================
-
-# Streamlit - Web application framework
 import streamlit as st
-
-# Requests - For making HTTP calls to the backend API
 import requests
-
-# Re - For regex text cleaning
 import re
-
-# Plotly - For creating interactive charts
+import json
+import os
+import base64
+from datetime import datetime
+from pathlib import Path
 import plotly.graph_objects as go
 
-# PIL - For image handling
 try:
     from PIL import Image
     import io
@@ -43,1366 +22,1074 @@ try:
 except ImportError:
     IMAGE_SUPPORT = False
 
+# ─────────────────────────────────────────────────────────────
+# CONFIG
+# ─────────────────────────────────────────────────────────────
+API_URL = "http://localhost:5000"
+HISTORY_FILE = Path("analysis_history.json")
 
-# =============================================================================
-# CONFIGURATION
-# =============================================================================
-
-# Configure the Streamlit page settings
 st.set_page_config(
-    page_title="Job Posting Advisor",    # Browser tab title
-    page_icon="🔍",                       # Browser tab icon
-    layout="wide",                        # Use full width of browser
-    initial_sidebar_state="collapsed"    # Hide sidebar by default
+    page_title="JobGuard AI",
+    page_icon="🛡️",
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
-# Backend API URL - change this if backend runs on different host/port
-API_URL = "http://localhost:5000"
+# ─────────────────────────────────────────────────────────────
+# HISTORY HELPERS
+# ─────────────────────────────────────────────────────────────
+
+def load_history():
+    if HISTORY_FILE.exists():
+        try:
+            with open(HISTORY_FILE, "r") as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
 
 
-# =============================================================================
-# CSS STYLING
-# =============================================================================
-
-def load_css():
-    """
-    Load custom CSS styles for the application.
-    
-    This function injects CSS into the page to customize:
-        - Fonts (using Inter from Google Fonts)
-        - Background colors and gradients
-        - Card designs with shadows
-        - Button styles
-        - Result card colors (green for legitimate, red for fraud)
-    
-    Note: Streamlit allows custom CSS via st.markdown with unsafe_allow_html=True
-    """
-    
-    # Define CSS as a multi-line string
-    css_styles = '''
-    <style>
-        /* Import Google Fonts - Inter is a clean, modern font */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        
-        /* Apply Inter font globally */
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        /* Fix broken Material Symbols icons - hide garbled text and show clean arrow */
-        [data-testid="stIconMaterial"] {
-            font-size: 0 !important;
-            width: 24px !important;
-            height: 24px !important;
-            display: inline-flex !important;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-        
-        [data-testid="stIconMaterial"]::before {
-            content: '▶';
-            font-size: 12px !important;
-            font-family: 'Inter', sans-serif !important;
-            color: #94a3b8 !important;
-            position: absolute;
-        }
-        
-        /* Arrow down when expanded */
-        details[open] [data-testid="stIconMaterial"]::before {
-            content: '▼';
-        }
-        
-        /* Main page background */
-        .main {
-            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
-            min-height: 100vh;
-        }
-        
-        /* Dark theme for streamlit elements */
-        .stApp {
-            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
-        }
-        
-        /* Container styling */
-        .block-container {
-            padding: 2rem 4rem !important;
-            max-width: 1400px !important;
-            margin: 0 auto !important;
-        }
-        
-        /* Hero section - large and impressive */
-        .hero-section {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
-            padding: 3.5rem 3rem;
-            border-radius: 24px;
-            margin-bottom: 2.5rem;
-            text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.35);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.5;
-        }
-        
-        /* Hero title - big and bold */
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 1rem;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            position: relative;
-            letter-spacing: -0.02em;
-        }
-        
-        /* Hero subtitle */
-        .hero-subtitle {
-            font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.95);
-            position: relative;
-            font-weight: 500;
-        }
-        
-        /* Section cards - glassmorphism style */
-        .modern-card {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(20px);
-            padding: 1.5rem 2rem;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .modern-card h3 {
-            color: white !important;
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-        
-        /* Text area - large and prominent */
-        .stTextArea textarea {
-            min-height: 320px !important;
-            font-size: 1.05rem !important;
-            line-height: 1.7 !important;
-            padding: 1.5rem !important;
-            border-radius: 16px !important;
-            border: 2px solid rgba(59, 130, 246, 0.3) !important;
-            background: rgba(15, 23, 42, 0.9) !important;
-            color: #e2e8f0 !important;
-            transition: all 0.3s ease !important;
-        }
-        
-        .stTextArea textarea::placeholder {
-            color: #64748b !important;
-        }
-        
-        .stTextArea textarea:focus {
-            border-color: #3b82f6 !important;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2), 0 8px 25px rgba(59, 130, 246, 0.15) !important;
-        }
-        
-        .stTextArea label {
-            display: none !important;
-        }
-        
-        /* Result cards - impressive with animations */
-        .result-card-legitimate {
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-            border: none;
-            border-radius: 20px;
-            padding: 2.5rem;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3);
-            animation: slideUp 0.5s ease-out;
-        }
-        
-        .result-card-fraudulent {
-            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-            border: none;
-            border-radius: 20px;
-            padding: 2.5rem;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 20px 40px rgba(239, 68, 68, 0.3);
-            animation: slideUp 0.5s ease-out;
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* Result label */
-        .result-label {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            color: white !important;
-        }
-        
-        /* Buttons - large and attractive */
-        .stButton > button {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
-            color: white !important;
-            border: none !important;
-            padding: 1rem 2rem !important;
-            border-radius: 12px !important;
-            font-size: 1.1rem !important;
-            font-weight: 600 !important;
-            transition: all 0.3s ease !important;
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3) !important;
-        }
-        
-        .stButton > button:hover {
-            transform: translateY(-3px) !important;
-            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4) !important;
-        }
-        
-        .stButton > button:active {
-            transform: translateY(-1px) !important;
-        }
-            font-size: 0.9rem !important;
-            font-weight: 500 !important;
-        }
-        
-        .stButton > button:hover {
-            opacity: 0.9;
-        }
-        
-        /* Tags for displaying features */
-        .feature-tag {
-            display: inline-block;
-            padding: 0.6rem 1.2rem;
-            margin: 0.3rem;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: transform 0.2s ease;
-        }
-        
-        .feature-tag:hover {
-            transform: scale(1.05);
-        }
-        
-        /* Warning tag style */
-        .tag-warning {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: #78350f;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-        }
-        
-        /* Safe tag style */
-        .tag-safe {
-            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-            color: #064e3b;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-        
-        /* Info box for explanations */
-        .info-box {
-            background: rgba(59, 130, 246, 0.1);
-            border-left: 4px solid #3b82f6;
-            padding: 1.5rem;
-            border-radius: 0 16px 16px 0;
-            margin: 1.5rem 0;
-            color: #e2e8f0;
-            font-size: 1.05rem;
-            line-height: 1.8;
-        }
-        
-        /* Status indicator */
-        .status-connected {
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 600;
-            color: white;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-        
-        .status-disconnected {
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 600;
-            color: white;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-        }
-        
-        /* Metrics styling */
-        [data-testid="stMetricValue"] {
-            font-size: 2.2rem !important;
-            font-weight: 700 !important;
-            color: white !important;
-        }
-        
-        [data-testid="stMetricLabel"] {
-            color: #94a3b8 !important;
-            font-size: 1rem !important;
-        }
-        
-        /* Tabs styling */
-        .stTabs [data-baseweb="tab-list"] {
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 12px;
-            padding: 0.5rem;
-            gap: 0.5rem;
-        }
-        
-        .stTabs [data-baseweb="tab"] {
-            background: transparent !important;
-            color: #94a3b8 !important;
-            border-radius: 8px !important;
-            padding: 0.75rem 1.5rem !important;
-        }
-        
-        .stTabs [aria-selected="true"] {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
-            color: white !important;
-        }
-        
-        /* Caption styling */
-        .stCaption {
-            color: #64748b !important;
-        }
-        
-        /* Warning message */
-        .stAlert {
-            background: rgba(251, 191, 36, 0.1) !important;
-            border: 1px solid rgba(251, 191, 36, 0.3) !important;
-            border-radius: 12px !important;
-        }
-        
-        /* Spinner */
-        .stSpinner > div {
-            border-color: #3b82f6 !important;
-        }
-        
-        /* Hide Streamlit's default menu, footer, and header */
-        #MainMenu, footer, header {
-            visibility: hidden;
-        }
-        
-        /* Expander styling - cleaner look */
-        .streamlit-expanderHeader {
-            background: rgba(30, 41, 59, 0.7) !important;
-            border-radius: 8px !important;
-            border: 1px solid rgba(148, 163, 184, 0.2) !important;
-            color: #f1f5f9 !important;
-            font-weight: 500 !important;
-            padding: 0.75rem 1rem !important;
-            font-size: 0.9rem !important;
-        }
-        
-        .streamlit-expanderHeader:hover {
-            background: rgba(51, 65, 85, 0.8) !important;
-            border-color: rgba(59, 130, 246, 0.4) !important;
-        }
-        
-        .streamlit-expanderContent {
-            background: rgba(15, 23, 42, 0.5) !important;
-            border: 1px solid rgba(148, 163, 184, 0.15) !important;
-            border-top: none !important;
-            border-radius: 0 0 8px 8px !important;
-            padding: 1rem !important;
-        }
-        
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.5);
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: rgba(148, 163, 184, 0.3);
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(148, 163, 184, 0.5);
-        }
-        
-        /* Footer styling */
-        .footer-text {
-            text-align: center;
-            color: #64748b;
-            padding: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 3rem;
-            font-size: 0.95rem;
-        }
-        
-        /* Placeholder box */
-        .placeholder-box {
-            text-align: center;
-            color: #64748b;
-            padding: 4rem 2rem;
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 20px;
-            border: 2px dashed rgba(100, 116, 139, 0.3);
-        }
-        
-        .placeholder-icon {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.7;
-        }
-        
-        .placeholder-text {
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-        
-        /* Better column gap for side-by-side layout */
-        [data-testid="column"] {
-            padding: 0 0.5rem;
-        }
-        
-        /* Ensure readable text everywhere */
-        p, div, span, li {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-        }
-        
-        /* GLOBAL TEXT VISIBILITY FIXES */
-        /* Make all text white/light by default */
-        .stApp, .main, .block-container {
-            color: #f1f5f9 !important;
-        }
-        
-        /* All paragraph and text elements */
-        p, span, div, label, h1, h2, h3, h4, h5, h6 {
-            color: #f1f5f9 !important;
-        }
-        
-        /* Markdown text */
-        .stMarkdown, .stMarkdown p, .stMarkdown span {
-            color: #f1f5f9 !important;
-        }
-        
-        /* Streamlit text elements */
-        .stText, [data-testid="stText"] {
-            color: #f1f5f9 !important;
-        }
-        
-        /* Success/Warning/Info/Error messages */
-        .stSuccess, [data-testid="stSuccess"] {
-            background-color: rgba(34, 197, 94, 0.15) !important;
-            color: #4ade80 !important;
-        }
-        .stSuccess p, .stSuccess span {
-            color: #4ade80 !important;
-        }
-        
-        .stWarning, [data-testid="stWarning"] {
-            background-color: rgba(251, 191, 36, 0.15) !important;
-            color: #fbbf24 !important;
-        }
-        .stWarning p, .stWarning span {
-            color: #fbbf24 !important;
-        }
-        
-        .stInfo, [data-testid="stInfo"] {
-            background-color: rgba(59, 130, 246, 0.15) !important;
-            color: #60a5fa !important;
-        }
-        .stInfo p, .stInfo span {
-            color: #60a5fa !important;
-        }
-        
-        .stError, [data-testid="stError"] {
-            background-color: rgba(239, 68, 68, 0.15) !important;
-            color: #f87171 !important;
-        }
-        .stError p, .stError span {
-            color: #f87171 !important;
-        }
-        
-        /* Expander content text */
-        .streamlit-expanderContent p, 
-        .streamlit-expanderContent span,
-        .streamlit-expanderContent div {
-            color: #f1f5f9 !important;
-        }
-        
-        /* Caption text - make it visible but dimmer */
-        .stCaption, [data-testid="stCaption"], small {
-            color: #94a3b8 !important;
-        }
-        
-        /* Metric labels and values */
-        [data-testid="stMetricLabel"] {
-            color: #94a3b8 !important;
-        }
-        [data-testid="stMetricValue"] {
-            color: #f1f5f9 !important;
-        }
-        
-        /* File uploader styling - dark theme compatible */
-        [data-testid="stFileUploader"] {
-            background-color: #1e293b !important;
-            border: 2px dashed #60a5fa !important;
-            border-radius: 12px !important;
-            padding: 1.5rem !important;
-        }
-        [data-testid="stFileUploader"] label,
-        [data-testid="stFileUploader"] p,
-        [data-testid="stFileUploader"] span,
-        [data-testid="stFileUploader"] small,
-        [data-testid="stFileUploader"] section {
-            color: #e2e8f0 !important;
-        }
-        [data-testid="stFileUploader"] button {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
-            color: white !important;
-            border: none !important;
-            padding: 0.5rem 1.5rem !important;
-            font-weight: 600 !important;
-        }
-        [data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"],
-        [data-testid="stFileUploaderDropzone"] {
-            background-color: #1e293b !important;
-            border: 2px dashed #60a5fa !important;
-            border-radius: 12px !important;
-        }
-        [data-testid="stFileUploaderDropzone"] span,
-        [data-testid="stFileUploaderDropzone"] small,
-        [data-testid="stFileUploaderDropzone"] p {
-            color: #e2e8f0 !important;
-        }
-        /* Upload icon visibility */
-        [data-testid="stFileUploaderDropzone"] svg {
-            fill: #60a5fa !important;
-            stroke: #60a5fa !important;
-        }
-        /* Browse files button */
-        [data-testid="stFileUploaderDropzone"] button,
-        [data-testid="stFileUploader"] [data-testid="baseButton-secondary"] {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
-            color: white !important;
-            border: none !important;
-            padding: 0.5rem 1.5rem !important;
-            font-weight: 600 !important;
-            border-radius: 8px !important;
-        }
-        
-        /* Tab content */
-        .stTabs [data-baseweb="tab-panel"] {
-            color: #f1f5f9 !important;
-        }
-        
-        /* Bold text */
-        strong, b {
-            color: #ffffff !important;
-            font-weight: 600 !important;
-        }
-        
-        /* Links */
-        a {
-            color: #60a5fa !important;
-        }
-        
-        /* Lists */
-        ul, ol, li {
-            color: #f1f5f9 !important;
-        }
-    </style>
-    '''
-    
-    # Inject the CSS into the page
-    st.markdown(css_styles, unsafe_allow_html=True)
+def save_history(history):
+    with open(HISTORY_FILE, "w") as f:
+        json.dump(history, f, indent=2)
 
 
-# =============================================================================
-# API COMMUNICATION FUNCTIONS
-# =============================================================================
+def add_to_history(text, result, analysis_type="quick"):
+    history = load_history()
+    entry = {
+        "id": datetime.now().strftime("%Y%m%d%H%M%S%f"),
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "text_preview": text[:120].strip() + ("..." if len(text) > 120 else ""),
+        "full_text": text,
+        "analysis_type": analysis_type,
+        "label": result.get("prediction", {}).get("label", "Unknown"),
+        "is_fraudulent": result.get("prediction", {}).get("is_fraudulent", False),
+        "confidence": result.get("prediction", {}).get("confidence", 0),
+        "fraud_signals": result.get("prediction", {}).get("fraud_signals", []),
+        "probabilities": result.get("prediction", {}).get("probabilities", {}),
+    }
+    history.insert(0, entry)
+    history = history[:100]  # keep last 100
+    save_history(history)
+    return entry
 
-def check_api() -> bool:
-    """
-    Check if the backend API is running and accessible.
-    
-    Makes a simple GET request to the /api/health endpoint.
-    
-    Returns:
-        True if API is accessible, False otherwise
-    """
+
+def clear_history():
+    save_history([])
+
+
+# ─────────────────────────────────────────────────────────────
+# API
+# ─────────────────────────────────────────────────────────────
+
+def check_api():
     try:
-        response = requests.get(
-            f"{API_URL}/api/health",
-            timeout=5
-        )
-        return response.status_code == 200
+        r = requests.get(f"{API_URL}/api/health", timeout=5)
+        return r.status_code == 200
     except Exception:
         return False
 
 
-def predict_job(text: str) -> dict:
-    """
-    Send job posting text to the API for quick prediction.
-    
-    Args:
-        text: The job posting text to analyze
-    
-    Returns:
-        Dictionary with prediction results, or None if error
-    
-    Example Response:
-        {
-            'success': True,
-            'prediction': {
-                'label': 'Legitimate',
-                'confidence': 95.5,
-                'is_fraudulent': False
-            }
-        }
-    """
+def predict_job(text):
     try:
-        response = requests.post(
-            f"{API_URL}/api/predict",
-            json={"text": text},
-            timeout=30  # 30 second timeout
-        )
-        
-        if response.status_code == 200:
-            return response.json()
-        else:
-            return None
-            
-    except Exception as error:
-        st.error(f"Error connecting to API: {error}")
+        r = requests.post(f"{API_URL}/api/predict", json={"text": text}, timeout=30)
+        return r.json() if r.status_code == 200 else None
+    except Exception as e:
+        st.error(f"API error: {e}")
         return None
 
 
-def batch_predict(texts: list) -> dict:
-    """
-    Send multiple job postings to the API for batch prediction.
-    
-    Args:
-        texts: List of job posting texts to analyze
-    
-    Returns:
-        Dictionary with batch prediction results
-    """
+def get_explanation(text):
     try:
-        response = requests.post(
-            f"{API_URL}/api/batch-predict",
-            json={"texts": texts},
-            timeout=120  # 2 minute timeout for batch
-        )
-        
-        if response.status_code == 200:
-            return response.json()
-        else:
-            return None
-            
-    except Exception as error:
-        st.error(f"Error connecting to API: {error}")
+        r = requests.post(f"{API_URL}/api/explain", json={"text": text}, timeout=120)
+        return r.json() if r.status_code == 200 else None
+    except Exception as e:
+        st.error(f"API error: {e}")
         return None
 
 
-def get_explanation(text: str) -> dict:
-    """
-    Send job posting text to the API for detailed analysis with explanation.
-    
-    Similar to predict_job but returns additional explanation data
-    including keyword analysis and charts.
-    
-    Args:
-        text: The job posting text to analyze
-    
-    Returns:
-        Dictionary with prediction and explanation, or None if error
-    """
+def explain_image_api(image_data: bytes):
     try:
-        response = requests.post(
-            f"{API_URL}/api/explain",
-            json={"text": text},
-            timeout=120  # 2 minute timeout (explanation takes longer)
-        )
-        
-        if response.status_code == 200:
-            return response.json()
-        else:
-            return None
-            
-    except Exception as error:
-        st.error(f"Error connecting to API: {error}")
+        image_b64 = base64.b64encode(image_data).decode("utf-8")
+        r = requests.post(f"{API_URL}/api/explain-image", json={"image": image_b64}, timeout=180)
+        if r.status_code == 200:
+            return r.json()
+        err = r.json() if r.content else {}
+        st.error(f"Error: {err.get('error', 'Unknown error')}")
+        return None
+    except Exception as e:
+        st.error(f"API error: {e}")
         return None
 
 
-def explain_image(image_data: bytes) -> dict:
-    """
-    Send job posting image to the API for OCR + detailed analysis.
-    
-    Extracts text from image via OCR, then returns the same
-    detailed analysis as get_explanation().
-    
-    Args:
-        image_data: Raw image bytes
-    
-    Returns:
-        Dictionary with prediction, explanation, and extracted text, or None if error
-    """
-    import base64
-    
+def batch_predict(texts):
     try:
-        # Convert image bytes to base64
-        image_b64 = base64.b64encode(image_data).decode('utf-8')
-        
-        response = requests.post(
-            f"{API_URL}/api/explain-image",
-            json={"image": image_b64},
-            timeout=180  # 3 minute timeout (OCR + explanation)
-        )
-        
-        if response.status_code == 200:
-            return response.json()
-        else:
-            error_data = response.json() if response.content else {}
-            st.error(f"Error: {error_data.get('error', 'Unknown error')}")
-            return None
-            
-    except Exception as error:
-        st.error(f"Error connecting to API: {error}")
+        r = requests.post(f"{API_URL}/api/batch-predict", json={"texts": texts}, timeout=120)
+        return r.json() if r.status_code == 200 else None
+    except Exception as e:
+        st.error(f"API error: {e}")
         return None
 
 
-# =============================================================================
-# UI RENDERING FUNCTIONS
-# =============================================================================
+# ─────────────────────────────────────────────────────────────
+# CSS
+# ─────────────────────────────────────────────────────────────
 
-def render_result(result: dict):
-    """
-    Render the prediction result card with advisory messaging.
-    
-    Shows clear differentiation between:
-    1. Final Combined Assessment (at top)
-    2. Rule-Based Detection (definitive fraud signals)
-    3. BERT AI Analysis (subtle pattern detection)
-    
-    Args:
-        result: Dictionary containing the API response with prediction
-    """
-    # Extract prediction data from result
-    prediction = result.get('prediction', {})
-    is_fraud = prediction.get('is_fraudulent', False)
-    confidence = prediction.get('confidence', 0)
-    fraud_signals = prediction.get('fraud_signals', [])
-    
-    # Get both hybrid (final) and BERT raw probabilities
-    probabilities = prediction.get('probabilities', {})
-    bert_raw = prediction.get('bert_raw', probabilities)  # Fallback to final if no raw
-    
-    final_fraud = probabilities.get('fraudulent', 0)
-    final_legit = probabilities.get('legitimate', 0)
-    bert_fraud = bert_raw.get('fraudulent', final_fraud)
-    bert_legit = bert_raw.get('legitimate', final_legit)
-    
-    # Determine if rules contributed to the score
-    rules_triggered = len(fraud_signals) > 0
-    
-    # ============================================
-    # SECTION 1: FINAL COMBINED ASSESSMENT
-    # ============================================
-    st.markdown("### 🎯 Final Combined Assessment")
-    
-    # Choose styling based on final risk
-    if is_fraud:
-        card_class = "result-card-fraudulent"
-        icon = "⚠️"
-        label = "High Risk - Exercise Caution"
-        sublabel = "We recommend verifying this posting carefully"
-    else:
-        card_class = "result-card-legitimate"
-        icon = "✓"
-        label = "Lower Risk - Appears Legitimate"
-        sublabel = "Always verify company details independently"
-    
-    # Render the FINAL result card with advisory language
-    result_html = f'''
-    <div class="{card_class}">
-        <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">{icon}</div>
-        <div class="result-label">{label}</div>
-        <div style="font-weight: 500; color: rgba(255,255,255,0.9); font-size: 1rem; margin-top: 0.5rem;">{sublabel}</div>
-        <div style="font-weight: 700; color: white; font-size: 1.4rem; margin-top: 1rem;">Final Risk Score: {final_fraud}%</div>
-        <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-top: 0.5rem;">
-            Combined from Rule Detection + BERT AI Analysis
-        </div>
-    </div>
-    '''
-    st.markdown(result_html, unsafe_allow_html=True)
-    
-    # ============================================
-    # SECTION 2: ANALYSIS BREAKDOWN
-    # ============================================
-    st.markdown("---")
-    st.markdown("### 📊 Analysis Breakdown")
-    
-    col_rules, col_bert = st.columns(2)
-    
-    # --- Rule-Based Detection Column ---
-    with col_rules:
-        rule_color = "#ef4444" if rules_triggered else "#22c55e"
-        rule_icon = "🚨" if rules_triggered else "✓"
-        rule_status = "Detected" if rules_triggered else "Clear"
-        
-        st.markdown(f"""
-        <div style="background: rgba(30, 41, 59, 0.8); border: 2px solid {rule_color}; border-radius: 12px; padding: 1rem; text-align: center;">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">{rule_icon}</div>
-            <div style="color: #94a3b8; font-size: 0.85rem; font-weight: 500;">Rule-Based Detection</div>
-            <div style="color: {rule_color}; font-size: 1.3rem; font-weight: 700; margin-top: 0.5rem;">{rule_status}</div>
-            <div style="color: #64748b; font-size: 0.75rem; margin-top: 0.25rem;">{len(fraud_signals)} warning sign(s) found</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.caption("*Checks for: fees, personal emails, gift cards, urgency tactics, etc.*")
-    
-    # --- BERT AI Analysis Column ---
-    with col_bert:
-        bert_is_risky = bert_fraud > 50
-        bert_color = "#ef4444" if bert_is_risky else "#22c55e"
-        bert_icon = "🤖" 
-        
-        st.markdown(f"""
-        <div style="background: rgba(30, 41, 59, 0.8); border: 2px solid {bert_color}; border-radius: 12px; padding: 1rem; text-align: center;">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">{bert_icon}</div>
-            <div style="color: #94a3b8; font-size: 0.85rem; font-weight: 500;">BERT AI Analysis</div>
-            <div style="color: {bert_color}; font-size: 1.3rem; font-weight: 700; margin-top: 0.5rem;">{bert_fraud}% Risk</div>
-            <div style="color: #64748b; font-size: 0.75rem; margin-top: 0.25rem;">Pattern-based ML detection</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.caption("*BERT catches subtle scam patterns learned from training data*")
-    
-    # ============================================
-    # SECTION 3: FRAUD SIGNALS (if any)
-    # ============================================
-    if fraud_signals:
-        st.markdown("---")
-        render_fraud_signals_advisory(fraud_signals)
+def load_css():
+    st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap');
 
+    * { font-family: 'DM Sans', sans-serif; }
+    h1, h2, h3, .hero-title { font-family: 'Syne', sans-serif !important; }
+    code, pre { font-family: 'DM Mono', monospace !important; }
 
-def render_fraud_signals_advisory(signals: list):
-    """
-    Render fraud signals with advisory recommendations.
-    
-    Each signal includes a helpful recommendation for the user
-    to take action, rather than a definitive verdict.
-    
-    Args:
-        signals: List of detected fraud signal strings
-    """
-    # Map signals to advisory recommendations
-    advisory_map = {
-        "Requests upfront payment/fees": "💡 Legitimate employers typically don't ask applicants to pay fees. We recommend confirming this with the company directly.",
-        "Uses personal email domain": "💡 This posting uses a personal email (gmail/yahoo/etc). We suggest verifying the company's official contact through their website.",
-        "Mentions gift cards": "💡 Gift card requests are a common scam tactic. We strongly recommend avoiding any job requiring gift card purchases.",
-        "Involves money transfers": "💡 Jobs involving money transfers may be money laundering schemes. Please research this company thoroughly.",
-        "Involves receiving checks": "💡 Check cashing schemes are common scams. We advise verifying this opportunity with consumer protection agencies.",
-        "No experience/interview required": "💡 Most legitimate jobs require interviews. Consider whether this offer seems realistic.",
-        "Uses urgency tactics": "💡 Pressure tactics like 'ACT NOW' are common in scams. Take your time to research before applying.",
-        "Unrealistic salary claims": "💡 This salary seems unusually high. We recommend checking typical pay rates on sites like Glassdoor.",
-        "Requests sensitive personal info": "💡 Be cautious about sharing SSN or bank details before formal hiring. Verify the employer first.",
-        "Excessive caps/exclamation marks": "💡 Professional job postings typically use standard formatting. This style is common in scam posts."
+    .stApp {
+        background: #070B14;
+        color: #E8EAF0;
     }
-    
-    st.markdown("### ⚠️ Points to Consider")
-    
-    for signal in signals:
-        advisory = advisory_map.get(signal, f"💡 Please verify this aspect of the posting independently.")
-        
-        signal_html = f'''
-        <div style="background: rgba(251, 191, 36, 0.15); border-left: 4px solid #fbbf24; 
-                    padding: 1rem 1.25rem; border-radius: 0 12px 12px 0; margin: 0.75rem 0;">
-            <div style="color: #fcd34d; font-weight: 600; margin-bottom: 0.5rem;">🚩 {signal}</div>
-            <div style="color: #e2e8f0; font-size: 0.95rem; line-height: 1.6;">{advisory}</div>
-        </div>
-        '''
-        st.markdown(signal_html, unsafe_allow_html=True)
+    .block-container {
+        padding: 0 3rem 3rem 3rem !important;
+        max-width: 1440px !important;
+    }
+
+    /* ─── NAV BAR ─── */
+    .nav-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 0;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        margin-bottom: 2.5rem;
+    }
+    .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-family: 'Syne', sans-serif;
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.02em;
+    }
+    .nav-logo-icon {
+        width: 36px; height: 36px;
+        background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+    .nav-status-dot {
+        display: inline-block;
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        margin-right: 6px;
+        animation: pulse 2s infinite;
+    }
+    .dot-green { background: #10B981; box-shadow: 0 0 8px #10B981; }
+    .dot-red { background: #EF4444; box-shadow: 0 0 8px #EF4444; }
+    @keyframes pulse {
+        0%,100% { opacity: 1; } 50% { opacity: 0.5; }
+    }
+    .nav-status {
+        font-size: 0.82rem;
+        color: #94A3B8;
+        display: flex;
+        align-items: center;
+    }
+
+    /* ─── HERO ─── */
+    .hero-section {
+        position: relative;
+        border-radius: 24px;
+        padding: 4rem 3rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0F1B35 0%, #1a1040 50%, #0d1f3c 100%);
+        border: 1px solid rgba(59,130,246,0.2);
+    }
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(59,130,246,0.18) 0%, transparent 70%),
+                    radial-gradient(ellipse 50% 40% at 80% 110%, rgba(139,92,246,0.12) 0%, transparent 60%);
+        pointer-events: none;
+    }
+    .hero-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+        background-size: 48px 48px;
+        pointer-events: none;
+    }
+    .hero-badge {
+        display: inline-block;
+        background: rgba(59,130,246,0.15);
+        border: 1px solid rgba(59,130,246,0.35);
+        color: #93C5FD;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.3rem 1rem;
+        border-radius: 999px;
+        margin-bottom: 1.25rem;
+        position: relative;
+    }
+    .hero-title {
+        font-family: 'Syne', sans-serif !important;
+        font-size: 3.8rem;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+    .hero-title span { 
+        background: linear-gradient(90deg, #60A5FA, #A78BFA);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+        font-size: 1.1rem;
+        color: #94A3B8;
+        max-width: 540px;
+        margin: 0 auto 2rem;
+        line-height: 1.7;
+        position: relative;
+    }
+    .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        position: relative;
+    }
+    .hero-stat-num {
+        font-family: 'Syne', sans-serif;
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #fff;
+    }
+    .hero-stat-label { font-size: 0.8rem; color: #64748B; }
+
+    /* ─── SECTION HEADER ─── */
+    .section-header {
+        font-family: 'Syne', sans-serif !important;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #3B82F6;
+        margin-bottom: 0.5rem;
+    }
+    .section-title {
+        font-family: 'Syne', sans-serif !important;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #F1F5F9;
+        margin-bottom: 1.25rem;
+    }
+
+    /* ─── CARDS ─── */
+    .glass-card {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 20px;
+        padding: 1.75rem;
+        margin-bottom: 1.25rem;
+        backdrop-filter: blur(12px);
+    }
+
+    /* ─── TEXTAREA ─── */
+    .stTextArea textarea {
+        min-height: 300px !important;
+        font-size: 0.95rem !important;
+        line-height: 1.75 !important;
+        padding: 1.25rem !important;
+        border-radius: 14px !important;
+        border: 1.5px solid rgba(59,130,246,0.2) !important;
+        background: rgba(7,11,20,0.9) !important;
+        color: #CBD5E1 !important;
+        font-family: 'DM Sans', sans-serif !important;
+        transition: border-color 0.2s ease !important;
+        resize: vertical !important;
+    }
+    .stTextArea textarea:focus {
+        border-color: rgba(59,130,246,0.6) !important;
+        box-shadow: 0 0 0 3px rgba(59,130,246,0.12) !important;
+    }
+    .stTextArea textarea::placeholder { color: #334155 !important; }
+    .stTextArea label { display: none !important; }
+
+    /* ─── BUTTONS ─── */
+    .stButton > button {
+        border-radius: 10px !important;
+        font-family: 'DM Sans', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 0.9rem !important;
+        padding: 0.65rem 1.5rem !important;
+        transition: all 0.2s ease !important;
+        border: none !important;
+    }
+    .stButton > button[kind="primary"],
+    .stButton > button:first-child {
+        background: linear-gradient(135deg, #3B82F6 0%, #6D28D9 100%) !important;
+        color: white !important;
+        box-shadow: 0 4px 20px rgba(59,130,246,0.25) !important;
+    }
+    .stButton > button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 28px rgba(59,130,246,0.35) !important;
+    }
+
+    /* ─── RESULT CARDS ─── */
+    .verdict-safe {
+        background: linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(5,150,105,0.06) 100%);
+        border: 1.5px solid rgba(16,185,129,0.35);
+        border-radius: 18px;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 1.25rem;
+    }
+    .verdict-fraud {
+        background: linear-gradient(135deg, rgba(239,68,68,0.12) 0%, rgba(220,38,38,0.06) 100%);
+        border: 1.5px solid rgba(239,68,68,0.35);
+        border-radius: 18px;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 1.25rem;
+    }
+    .verdict-icon { font-size: 2.8rem; margin-bottom: 0.75rem; }
+    .verdict-label {
+        font-family: 'Syne', sans-serif !important;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #fff;
+    }
+    .verdict-sub { font-size: 0.85rem; color: #94A3B8; margin-top: 0.4rem; }
+    .verdict-score {
+        font-family: 'DM Mono', monospace;
+        font-size: 2.2rem;
+        font-weight: 500;
+        margin-top: 1rem;
+        color: #fff;
+    }
+
+    /* ─── MINI STAT ─── */
+    .mini-stat-box {
+        background: rgba(15,23,42,0.8);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 14px;
+        padding: 1rem;
+        text-align: center;
+    }
+    .mini-stat-val {
+        font-family: 'Syne', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #fff;
+    }
+    .mini-stat-lbl { font-size: 0.75rem; color: #64748B; margin-top: 0.2rem; }
+
+    /* ─── SIGNAL PILLS ─── */
+    .signal-pill {
+        display: inline-block;
+        background: rgba(251,191,36,0.1);
+        border: 1px solid rgba(251,191,36,0.3);
+        color: #FCD34D;
+        font-size: 0.78rem;
+        font-weight: 500;
+        padding: 0.28rem 0.8rem;
+        border-radius: 999px;
+        margin: 0.2rem;
+    }
+
+    /* ─── TABS ─── */
+    .stTabs [data-baseweb="tab-list"] {
+        background: rgba(15,23,42,0.6);
+        border-radius: 12px;
+        padding: 4px;
+        gap: 4px;
+        border: 1px solid rgba(255,255,255,0.06);
+    }
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 8px !important;
+        color: #64748B !important;
+        font-size: 0.85rem !important;
+        font-weight: 500 !important;
+        padding: 0.5rem 1.2rem !important;
+        background: transparent !important;
+    }
+    .stTabs [aria-selected="true"] {
+        background: rgba(59,130,246,0.2) !important;
+        color: #93C5FD !important;
+    }
+
+    /* ─── PAGE TABS (nav) ─── */
+    .page-nav {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2.5rem;
+    }
+    .page-tab {
+        padding: 0.5rem 1.5rem;
+        border-radius: 10px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid rgba(255,255,255,0.08);
+        color: #64748B;
+        background: rgba(15,23,42,0.5);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+    .page-tab.active {
+        background: rgba(59,130,246,0.15);
+        border-color: rgba(59,130,246,0.4);
+        color: #93C5FD;
+    }
+
+    /* ─── HISTORY ─── */
+    .history-card {
+        background: rgba(15,23,42,0.7);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 16px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 0.75rem;
+        transition: border-color 0.2s;
+        cursor: pointer;
+    }
+    .history-card:hover {
+        border-color: rgba(59,130,246,0.3);
+    }
+    .history-card.fraud { border-left: 3px solid #EF4444; }
+    .history-card.legit { border-left: 3px solid #10B981; }
+    .history-time {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.72rem;
+        color: #475569;
+    }
+    .history-badge-fraud {
+        display: inline-block;
+        background: rgba(239,68,68,0.15);
+        color: #FCA5A5;
+        border: 1px solid rgba(239,68,68,0.3);
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 0.15rem 0.7rem;
+        border-radius: 999px;
+    }
+    .history-badge-legit {
+        display: inline-block;
+        background: rgba(16,185,129,0.15);
+        color: #6EE7B7;
+        border: 1px solid rgba(16,185,129,0.3);
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 0.15rem 0.7rem;
+        border-radius: 999px;
+    }
+    .history-preview {
+        color: #94A3B8;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        line-height: 1.5;
+    }
+    .history-conf {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.82rem;
+        color: #64748B;
+    }
+
+    /* ─── PLACEHOLDER ─── */
+    .placeholder-wrap {
+        text-align: center;
+        padding: 5rem 2rem;
+        color: #334155;
+    }
+    .placeholder-icon { font-size: 3.5rem; margin-bottom: 1rem; opacity: 0.5; }
+    .placeholder-txt { font-size: 1rem; }
+
+    /* ─── DISCLAIMER ─── */
+    .disclaimer {
+        background: rgba(59,130,246,0.06);
+        border: 1px solid rgba(59,130,246,0.15);
+        border-radius: 14px;
+        padding: 1.2rem 1.5rem;
+        color: #64748B;
+        font-size: 0.82rem;
+        line-height: 1.7;
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    /* ─── MISC ─── */
+    .stCaption, small { color: #475569 !important; }
+    p, span, div, label, li { color: #E2E8F0 !important; }
+    strong, b { color: #F1F5F9 !important; }
+    .stMarkdown p { color: #CBD5E1 !important; }
+    #MainMenu, footer, header { visibility: hidden; }
+    .stAlert { border-radius: 12px !important; }
+    [data-testid="stMetricValue"] { color: #fff !important; font-weight: 700 !important; }
+    [data-testid="stMetricLabel"] { color: #64748B !important; }
+
+    /* expander */
+    .streamlit-expanderHeader {
+        background: rgba(15,23,42,0.7) !important;
+        border-radius: 10px !important;
+        border: 1px solid rgba(255,255,255,0.07) !important;
+        color: #CBD5E1 !important;
+        font-weight: 500 !important;
+        font-size: 0.875rem !important;
+    }
+    .streamlit-expanderContent {
+        background: rgba(7,11,20,0.6) !important;
+        border: 1px solid rgba(255,255,255,0.05) !important;
+        border-top: none !important;
+        border-radius: 0 0 10px 10px !important;
+    }
+
+    /* file uploader */
+    [data-testid="stFileUploader"] {
+        background: rgba(15,23,42,0.7) !important;
+        border: 1.5px dashed rgba(59,130,246,0.35) !important;
+        border-radius: 14px !important;
+    }
+    [data-testid="stFileUploaderDropzone"] button {
+        background: linear-gradient(135deg, #3B82F6, #6D28D9) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(7,11,20,0.5); }
+    ::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.3); border-radius: 3px; }
+    </style>
+    """, unsafe_allow_html=True)
 
 
-def render_explanation(data: dict):
-    """
-    Render the detailed explanation in a clean, simple format.
-    """
-    explanation = data.get('explanation', {})
-    detailed_analysis = data.get('detailed_analysis', {})
-    prediction = data.get('prediction', {})
-    
-    # Create tabs
-    tab1, tab2, tab3 = st.tabs(["📋 Advisory", "📊 Key Factors", "📝 Summary"])
-    
-    # === TAB 1: Advisory ===
-    with tab1:
-        # Risk banner
-        risk_summary = detailed_analysis.get('risk_summary', {})
-        overall_risk = risk_summary.get('overall_risk', 'UNKNOWN')
-        overall_advice = risk_summary.get('overall_advice', 'Analysis complete.')
-        
-        risk_colors = {'CRITICAL': '#dc2626', 'HIGH': '#ea580c', 'MEDIUM': '#ca8a04', 'LOW': '#16a34a'}
-        risk_icons = {'CRITICAL': '🔴', 'HIGH': '🟠', 'MEDIUM': '🟡', 'LOW': '🟢'}
-        color = risk_colors.get(overall_risk, '#6b7280')
-        icon = risk_icons.get(overall_risk, '⚪')
-        
+# ─────────────────────────────────────────────────────────────
+# RENDER HELPERS
+# ─────────────────────────────────────────────────────────────
+
+def render_verdict(result):
+    pred = result.get("prediction", {})
+    is_fraud = pred.get("is_fraudulent", False)
+    conf = pred.get("confidence", 0)
+    probs = pred.get("probabilities", {})
+    fraud_signals = pred.get("fraud_signals", [])
+    bert_raw = pred.get("bert_raw", probs)
+
+    if is_fraud:
         st.markdown(f"""
-        <div style="background: {color}20; border: 2px solid {color}; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
-            <div style="font-size: 20px; font-weight: bold; color: {color}; margin-bottom: 8px;">
-                {icon} Risk Level: {overall_risk}
-            </div>
-            <div style="color: #e2e8f0; font-size: 14px; line-height: 1.6;">{overall_advice}</div>
+        <div class="verdict-fraud">
+            <div class="verdict-icon">⚠️</div>
+            <div class="verdict-label">High Risk Detected</div>
+            <div class="verdict-sub">Proceed with caution — verify through official channels</div>
+            <div class="verdict-score">{probs.get('fraudulent', conf)}% Fraud Risk</div>
         </div>
         """, unsafe_allow_html=True)
-        
-        # Two columns: Findings | Details
-        left_col, right_col = st.columns([3, 2])
-        
-        with left_col:
-            st.markdown("**🔍 Risk Findings**")
-            advisories = detailed_analysis.get('detailed_advisories', [])
+    else:
+        st.markdown(f"""
+        <div class="verdict-safe">
+            <div class="verdict-icon">✓</div>
+            <div class="verdict-label">Appears Legitimate</div>
+            <div class="verdict-sub">Always independently verify company details</div>
+            <div class="verdict-score">{probs.get('legitimate', conf)}% Safe Score</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Mini stats row
+    bert_fraud = bert_raw.get("fraudulent", probs.get("fraudulent", 0))
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        clr = "#EF4444" if is_fraud else "#10B981"
+        st.markdown(f"""
+        <div class="mini-stat-box">
+            <div class="mini-stat-val" style="color:{clr}">{probs.get('fraudulent', 0)}%</div>
+            <div class="mini-stat-lbl">Final Risk</div>
+        </div>""", unsafe_allow_html=True)
+    with c2:
+        clr2 = "#EF4444" if bert_fraud > 50 else "#10B981"
+        st.markdown(f"""
+        <div class="mini-stat-box">
+            <div class="mini-stat-val" style="color:{clr2}">{bert_fraud}%</div>
+            <div class="mini-stat-lbl">BERT Score</div>
+        </div>""", unsafe_allow_html=True)
+    with c3:
+        n = len(fraud_signals)
+        clr3 = "#F59E0B" if n > 0 else "#10B981"
+        st.markdown(f"""
+        <div class="mini-stat-box">
+            <div class="mini-stat-val" style="color:{clr3}">{n}</div>
+            <div class="mini-stat-lbl">Red Flags</div>
+        </div>""", unsafe_allow_html=True)
+
+    # Signal pills
+    if fraud_signals:
+        st.markdown("<div style='margin-top:1rem'>", unsafe_allow_html=True)
+        pills = "".join(f'<span class="signal-pill">🚩 {s}</span>' for s in fraud_signals)
+        st.markdown(f"<div style='margin-top:0.75rem'>{pills}</div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+
+def render_explanation(data):
+    explanation = data.get("explanation", {})
+    detailed_analysis = data.get("detailed_analysis", {})
+    prediction = data.get("prediction", {})
+
+    tab1, tab2, tab3 = st.tabs(["🔍 Advisory", "📊 Key Factors", "📋 Summary"])
+
+    with tab1:
+        risk_summary = detailed_analysis.get("risk_summary", {})
+        overall_risk = risk_summary.get("overall_risk", "UNKNOWN")
+        overall_advice = risk_summary.get("overall_advice", "Analysis complete.")
+        risk_colors = {"CRITICAL": "#DC2626", "HIGH": "#EA580C", "MEDIUM": "#CA8A04", "LOW": "#16A34A"}
+        risk_icons = {"CRITICAL": "🔴", "HIGH": "🟠", "MEDIUM": "🟡", "LOW": "🟢"}
+        color = risk_colors.get(overall_risk, "#6B7280")
+        icon = risk_icons.get(overall_risk, "⚪")
+
+        st.markdown(f"""
+        <div style="background:{color}18; border:1.5px solid {color}50; border-radius:12px; padding:1.25rem; margin-bottom:1.25rem;">
+            <div style="font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; color:{color}; margin-bottom:0.5rem">{icon} Risk Level: {overall_risk}</div>
+            <div style="color:#CBD5E1; font-size:0.875rem; line-height:1.65">{overall_advice}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        left, right = st.columns([3, 2])
+        with left:
+            st.markdown('<div class="section-header">Risk Findings</div>', unsafe_allow_html=True)
+            advisories = detailed_analysis.get("detailed_advisories", [])
             if advisories:
                 for adv in advisories:
-                    cat = adv.get('category', 'Finding')
-                    find = adv.get('finding', '')
-                    level = adv.get('risk_level', 'Info')
-                    advice = adv.get('advisory', '')
-                    adv_icon = adv.get('icon', '📌')
-                    
-                    level_color = {'Critical': '#ef4444', 'High': '#f97316', 'Medium': '#eab308', 'Low': '#22c55e'}.get(level, '#3b82f6')
-                    
-                    with st.expander(f"{adv_icon} {cat}: {find}"):
+                    lv = adv.get("risk_level", "Info")
+                    lv_clr = {"Critical": "#EF4444", "High": "#F97316", "Medium": "#EAB308", "Low": "#22C55E"}.get(lv, "#3B82F6")
+                    with st.expander(f"{adv.get('icon','📌')} {adv.get('category','')}: {adv.get('finding','')}"):
                         st.markdown(f"""
-                        <span style="background: {level_color}; color: white; padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: bold;">{level}</span>
-                        <div style="margin-top: 12px; color: #e2e8f0; line-height: 1.7; font-size: 14px;">{advice}</div>
+                        <span style="background:{lv_clr}; color:white; padding:2px 10px; border-radius:4px; font-size:11px; font-weight:700">{lv}</span>
+                        <div style="margin-top:10px; color:#CBD5E1; line-height:1.7; font-size:0.875rem">{adv.get('advisory','')}</div>
                         """, unsafe_allow_html=True)
             else:
                 st.success("No specific red flags detected.")
-        
-        with right_col:
-            st.markdown("**📑 Extracted Info**")
-            info = detailed_analysis.get('extracted_info', {})
-            
-            # Display extracted details simply
-            if info.get('emails'):
-                emails = info['emails']
-                is_personal = any('@gmail' in e or '@yahoo' in e or '@hotmail' in e for e in emails)
-                st.markdown(f"📧 **Email:** <span style='color: {'#ef4444' if is_personal else '#22c55e'}'>{', '.join(emails)}</span>", unsafe_allow_html=True)
-            
-            if info.get('phone_numbers'):
+
+        with right:
+            st.markdown('<div class="section-header">Extracted Info</div>', unsafe_allow_html=True)
+            info = detailed_analysis.get("extracted_info", {})
+            if info.get("emails"):
+                emails = info["emails"]
+                is_personal = any("@gmail" in e or "@yahoo" in e or "@hotmail" in e for e in emails)
+                clr = "#EF4444" if is_personal else "#22C55E"
+                st.markdown(f"📧 **Email:** <span style='color:{clr}'>{', '.join(emails)}</span>", unsafe_allow_html=True)
+            if info.get("phone_numbers"):
                 st.markdown(f"📞 **Phone:** {', '.join(info['phone_numbers'])}")
-            
-            if info.get('company_mentions'):
+            if info.get("company_mentions"):
                 st.markdown(f"🏢 **Company:** {', '.join(info['company_mentions'][:2])}")
-            
-            if info.get('work_arrangement'):
-                st.markdown(f"💼 **Work Type:** {info['work_arrangement'].replace('_', ' ').title()}")
-            
-            if info.get('messaging_apps'):
-                # messaging_apps is a boolean flag, not a list
-                st.markdown(f"💬 **Messaging:** <span style='color: #f97316'>WhatsApp/Telegram detected ⚠️</span>", unsafe_allow_html=True)
-            
-            if info.get('requests_sensitive_info'):
-                # requests_sensitive_info is a boolean flag
-                st.markdown(f"🔐 **Info Requested:** <span style='color: #ef4444'>SSN/Bank details requested ⚠️</span>", unsafe_allow_html=True)
-            
-            if not any([info.get('emails'), info.get('phone_numbers'), info.get('company_mentions')]):
+            if info.get("work_arrangement"):
+                st.markdown(f"💼 **Work:** {info['work_arrangement'].replace('_',' ').title()}")
+            if info.get("messaging_apps"):
+                st.markdown("💬 **Messaging:** <span style='color:#F97316'>WhatsApp/Telegram ⚠️</span>", unsafe_allow_html=True)
+            if info.get("requests_sensitive_info"):
+                st.markdown("🔐 **Info:** <span style='color:#EF4444'>SSN/Bank details requested ⚠️</span>", unsafe_allow_html=True)
+            if not any([info.get("emails"), info.get("phone_numbers"), info.get("company_mentions")]):
                 st.info("No contact details extracted.")
-    
-    # === TAB 2: Key Factors ===
+
     with tab2:
-        chart_data = explanation.get('chart_data', {})
-        words = chart_data.get('words', []) if chart_data else []
-        weights = chart_data.get('weights', []) if chart_data else []
-        
+        chart_data = explanation.get("chart_data", {})
+        words = chart_data.get("words", [])
+        weights = chart_data.get("weights", [])
         if words and weights:
             try:
-                colors = ['#ef4444' if w > 0 else '#22c55e' for w in weights]
-                fig = go.Figure(go.Bar(x=weights, y=words, orientation='h', marker=dict(color=colors)))
+                colors = ["#EF4444" if w > 0 else "#10B981" for w in weights]
+                fig = go.Figure(go.Bar(
+                    x=weights, y=words, orientation="h",
+                    marker=dict(color=colors, opacity=0.85),
+                ))
                 fig.update_layout(
-                    title=dict(text="Word Impact on Prediction", font=dict(color='#ffffff', size=18)),
-                    xaxis_title="Impact (+ = risk, - = safe)", 
-                    xaxis=dict(title_font=dict(color='#e2e8f0'), tickfont=dict(color='#e2e8f0')),
-                    yaxis=dict(tickfont=dict(color='#e2e8f0')),
-                    height=350,
-                    paper_bgcolor='rgba(0,0,0,0)', 
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    font=dict(color='#e2e8f0')
+                    title=dict(text="Word Impact on Prediction", font=dict(color="#F1F5F9", size=15, family="Syne")),
+                    xaxis=dict(title="Impact Score", title_font=dict(color="#94A3B8"), tickfont=dict(color="#64748B"), gridcolor="rgba(255,255,255,0.05)"),
+                    yaxis=dict(tickfont=dict(color="#94A3B8")),
+                    height=360,
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    plot_bgcolor="rgba(0,0,0,0)",
+                    font=dict(color="#94A3B8", family="DM Sans"),
+                    margin=dict(l=10, r=10, t=40, b=10),
                 )
                 st.plotly_chart(fig, use_container_width=True)
             except Exception:
-                st.info("Chart could not be rendered.")
+                st.info("Chart unavailable.")
         else:
-            # Fallback: show fraud signals as key factors
-            fraud_signals = prediction.get('fraud_signals', [])
-            if fraud_signals:
-                st.markdown("**Key Risk Indicators Found:**")
-                for signal in fraud_signals:
-                    st.markdown(f"🚩 {signal}")
+            signals = prediction.get("fraud_signals", [])
+            if signals:
+                for s in signals:
+                    st.markdown(f"🚩 {s}")
             else:
-                st.info("No key word factors available. See the Advisory tab for detailed analysis.")
-    
-    # === TAB 3: Summary ===
+                st.info("No key factor data available.")
+
     with tab3:
-        interpretation = explanation.get('interpretation', '')
-        
-        # Get final and BERT raw scores for the summary
-        probs = prediction.get('probabilities', {})
-        bert_raw = prediction.get('bert_raw', probs)
-        final_risk = probs.get('fraudulent', 0)
-        bert_risk = bert_raw.get('fraudulent', final_risk)
-        fraud_signals = prediction.get('fraud_signals', [])
-        
-        # ===== FINAL SCORE SUMMARY BOX =====
-        is_high_risk = final_risk > 50
-        summary_color = "#dc2626" if is_high_risk else "#16a34a"
-        summary_icon = "⚠️" if is_high_risk else "✓"
-        summary_label = "HIGH RISK" if is_high_risk else "LOW RISK"
-        
+        interpretation = explanation.get("interpretation", "")
+        probs = prediction.get("probabilities", {})
+        bert_raw = prediction.get("bert_raw", probs)
+        final_risk = probs.get("fraudulent", 0)
+        bert_risk = bert_raw.get("fraudulent", final_risk)
+        signals = prediction.get("fraud_signals", [])
+        is_high = final_risk > 50
+        sc = "#DC2626" if is_high else "#16A34A"
+        lbl = "HIGH RISK" if is_high else "LOW RISK"
+        ico = "⚠️" if is_high else "✓"
+
         st.markdown(f"""
-        <div style="background: linear-gradient(135deg, {summary_color}22 0%, {summary_color}11 100%); 
-                    border: 2px solid {summary_color}; border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
-            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">{summary_icon}</div>
-            <div style="font-size: 1.8rem; font-weight: 800; color: {summary_color}; margin-bottom: 0.5rem;">
-                {summary_label}
-            </div>
-            <div style="font-size: 2.2rem; font-weight: 700; color: #f1f5f9; margin-bottom: 0.75rem;">
-                Final Score: {final_risk}%
-            </div>
-            <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 1rem;">
-                <div style="text-align: center;">
-                    <div style="color: #94a3b8; font-size: 0.85rem;">Rule Detection</div>
-                    <div style="color: {'#ef4444' if len(fraud_signals) > 0 else '#22c55e'}; font-size: 1.1rem; font-weight: 600;">
-                        {len(fraud_signals)} warning(s)
-                    </div>
-                </div>
-                <div style="text-align: center;">
-                    <div style="color: #94a3b8; font-size: 0.85rem;">BERT Analysis</div>
-                    <div style="color: {'#ef4444' if bert_risk > 50 else '#22c55e'}; font-size: 1.1rem; font-weight: 600;">
-                        {bert_risk}% risk
-                    </div>
-                </div>
+        <div style="background:linear-gradient(135deg,{sc}15,{sc}08); border:1.5px solid {sc}50; border-radius:16px; padding:1.5rem; text-align:center; margin-bottom:1.25rem;">
+            <div style="font-size:2.2rem; margin-bottom:0.4rem">{ico}</div>
+            <div style="font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:{sc}; margin-bottom:0.3rem">{lbl}</div>
+            <div style="font-family:'DM Mono',monospace; font-size:2rem; font-weight:500; color:#fff; margin-bottom:0.75rem">Final: {final_risk}%</div>
+            <div style="display:flex; justify-content:center; gap:2.5rem;">
+                <div><div style="color:#64748B; font-size:0.8rem">Rule Detection</div>
+                <div style="color:{'#EF4444' if len(signals)>0 else '#10B981'}; font-size:1rem; font-weight:700">{len(signals)} warning(s)</div></div>
+                <div><div style="color:#64748B; font-size:0.8rem">BERT Score</div>
+                <div style="color:{'#EF4444' if bert_risk>50 else '#10B981'}; font-size:1rem; font-weight:700">{bert_risk}% risk</div></div>
             </div>
         </div>
         """, unsafe_allow_html=True)
-        
-        # Show interpretation or create one from risk summary
+
         if interpretation:
             st.markdown(f"""
-            <div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 15px; border-radius: 0 8px 8px 0; color: #e2e8f0; line-height: 1.7;">
+            <div style="background:rgba(59,130,246,0.08); border-left:3px solid #3B82F6; padding:1.2rem 1.5rem; border-radius:0 12px 12px 0; color:#CBD5E1; font-size:0.9rem; line-height:1.75">
                 {interpretation}
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown(f"""
-            <div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 15px; border-radius: 0 8px 8px 0; color: #e2e8f0; line-height: 1.7;">
-                <strong>Risk Assessment: {overall_risk}</strong><br><br>
-                {overall_advice}
-            </div>
-            """, unsafe_allow_html=True)
-        
-        st.markdown("---")
-        
-        # Two columns for indicators
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("**⚠️ Suspicious Indicators**")
-            pos_features = explanation.get('positive_features', [])
-            fraud_signals = prediction.get('fraud_signals', [])
-            
-            if pos_features:
-                for f in pos_features[:5]:
-                    word = f.get('word', str(f)) if isinstance(f, dict) else str(f)
-                    st.warning(word)
-            elif fraud_signals:
-                for sig in fraud_signals[:5]:
-                    short = sig[:30] + "..." if len(sig) > 30 else sig
-                    st.warning(short)
+            </div>""", unsafe_allow_html=True)
+
+        c1, c2 = st.columns(2)
+        with c1:
+            st.markdown('<div class="section-header" style="margin-top:1rem">Suspicious Indicators</div>', unsafe_allow_html=True)
+            pos = explanation.get("positive_features", [])
+            if pos:
+                for f in pos[:5]:
+                    w = f.get("word", str(f)) if isinstance(f, dict) else str(f)
+                    st.warning(w)
+            elif signals:
+                for s in signals[:5]:
+                    st.warning(s[:35] + ("..." if len(s) > 35 else ""))
             else:
                 st.caption("None identified")
-        
-        with col2:
-            st.markdown("**✓ Legitimate Indicators**")
-            neg_features = explanation.get('negative_features', [])
-            
-            if neg_features:
-                for f in neg_features[:5]:
-                    word = f.get('word', str(f)) if isinstance(f, dict) else str(f)
-                    st.success(word)
+        with c2:
+            st.markdown('<div class="section-header" style="margin-top:1rem">Legitimate Indicators</div>', unsafe_allow_html=True)
+            neg = explanation.get("negative_features", [])
+            if neg:
+                for f in neg[:5]:
+                    w = f.get("word", str(f)) if isinstance(f, dict) else str(f)
+                    st.success(w)
             else:
                 st.caption("None identified")
 
 
-# =============================================================================
-# MAIN APPLICATION
-# =============================================================================
+# ─────────────────────────────────────────────────────────────
+# PAGE: ANALYZE
+# ─────────────────────────────────────────────────────────────
 
-def main():
-    """
-    Main function that runs the Streamlit application.
-    
-    This function:
-        1. Loads CSS styles
-        2. Renders the hero section
-        3. Checks API connection status
-        4. Creates two-column layout: input on left, results on right
-        5. Handles user interactions using session state
-    """
-    # Load custom CSS styles
-    load_css()
-    
-    # Initialize session state for storing results
-    if 'analysis_result' not in st.session_state:
-        st.session_state.analysis_result = None
-    if 'analysis_type' not in st.session_state:
-        st.session_state.analysis_type = None
-    
-    # === HERO SECTION ===
-    hero_html = '''
-    <div class="hero-section">
-        <h1 class="hero-title">Job Posting Advisor</h1>
-        <p class="hero-subtitle">AI-powered risk assessment to help you identify potential scams</p>
-    </div>
-    '''
-    st.markdown(hero_html, unsafe_allow_html=True)
-    
-    # === API STATUS INDICATOR ===
-    is_connected = check_api()
-    
-    if is_connected:
-        status_text = "✅ API Connected"
-        status_class = "status-connected"
-    else:
-        status_text = "❌ API Disconnected - Click Refresh or restart backend"
-        status_class = "status-disconnected"
-    
-    # Status only (no refresh button)
-    st.markdown(f'''<div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-        <div class="{status_class}" style="flex: 1;">{status_text}</div>
-    </div>''', unsafe_allow_html=True)
-    
-    # === MAIN LAYOUT: Two columns side by side ===
-    col_input, col_results = st.columns(2, gap="large")
-    
-    # === LEFT COLUMN: Input Section ===
-    with col_input:
-        st.markdown(
-            '<div class="modern-card"><h3 style="margin:0;">Enter Job Posting</h3></div>',
-            unsafe_allow_html=True
-        )
-        
-        # Text input area
+def page_analyze(is_connected):
+    col_in, col_out = st.columns(2, gap="large")
+
+    with col_in:
+        st.markdown('<div class="section-header">Input</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-title">Paste Job Posting</div>', unsafe_allow_html=True)
+
         job_text = st.text_area(
-            label="Paste job posting:",
-            height=280,
-            placeholder="Paste the complete job posting here...",
+            label="text",
+            height=300,
+            placeholder="Paste the complete job posting text here...\n\nInclude title, description, requirements, contact info, etc.",
             label_visibility="collapsed",
             key="job_input"
         )
-        
-        # Character count
-        st.caption(f"Characters: {len(job_text)}")
-        
-        # Analysis buttons
-        col_btn1, col_btn2 = st.columns(2)
-        
-        with col_btn1:
-            quick_clicked = st.button(
-                "Quick Analysis",
-                use_container_width=True,
-                disabled=not is_connected,
-                key="quick_btn"
-            )
-        
-        with col_btn2:
-            detailed_clicked = st.button(
-                "Detailed Analysis",
-                use_container_width=True,
-                disabled=not is_connected,
-                key="detailed_btn"
-            )
-        
-        # Handle button clicks
-        if quick_clicked and job_text:
-            with st.spinner("Analyzing..."):
-                result = predict_job(job_text)
-                if result and result.get('success'):
-                    st.session_state.analysis_result = result
-                    st.session_state.analysis_type = 'quick'
-        
-        if detailed_clicked and job_text:
-            with st.spinner("Generating detailed analysis..."):
-                result = get_explanation(job_text)
-                if result and result.get('success'):
-                    st.session_state.analysis_result = result
-                    st.session_state.analysis_type = 'detailed'
-        
-        if not job_text and (quick_clicked or detailed_clicked):
-            st.warning("Please enter a job posting to analyze.")
-        
-        # === BATCH MODE ===
-        with st.expander("📦 Batch Mode - Analyze Multiple Postings"):
-            st.markdown("""<p style='color: #94a3b8; font-size: 0.9rem; margin: 0 0 1rem 0;'>
-                <strong>How to use:</strong> Enter multiple job postings in the text area above.<br>
-                Separate each posting with <code style='background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 4px; color: #60a5fa;'>---</code> on its own line.
-            </p>""", unsafe_allow_html=True)
-            batch_clicked = st.button(
-                "Batch Analyze",
-                use_container_width=True,
-                disabled=not is_connected,
-                key="batch_btn"
-            )
-            
-            if batch_clicked and job_text:
-                # Split by --- separator
-                postings = [p.strip() for p in job_text.split('---') if p.strip() and len(p.strip()) > 10]
-                
-                if len(postings) == 0:
-                    st.warning("No valid postings found. Make sure text is longer than 10 characters.")
-                elif len(postings) == 1:
-                    st.info("Only 1 posting detected. Use Quick Analysis for single postings.")
-                elif len(postings) > 100:
-                    st.error(f"Too many postings ({len(postings)}). Maximum is 100.")
-                else:
-                    with st.spinner(f"Analyzing {len(postings)} postings..."):
-                        result = batch_predict(postings)
-                        if result and result.get('success'):
-                            st.success(f"✅ Analyzed {result.get('total', len(postings))} postings")
-                            for pred in result.get('predictions', []):
-                                idx = pred.get('index', 0) + 1
-                                label = pred.get('label', 'Unknown')
-                                conf = pred.get('confidence', 0)
-                                icon = "✅" if label == "Legitimate" else "⚠️"
-                                color = "#10b981" if label == "Legitimate" else "#ef4444"
-                                st.markdown(f"**{icon} Posting {idx}:** <span style='color:{color}'>{label}</span> ({conf}%)", unsafe_allow_html=True)
-                        else:
-                            st.error("Batch analysis failed. Check API connection.")
-            elif batch_clicked and not job_text:
-                st.warning("Please enter job postings separated by ---")
-        
-        # === IMAGE OCR MODE ===
+        st.caption(f"{len(job_text):,} characters")
+
+        b1, b2 = st.columns(2)
+        with b1:
+            quick = st.button("⚡ Quick Analysis", use_container_width=True, disabled=not is_connected)
+        with b2:
+            detailed = st.button("🔬 Detailed Analysis", use_container_width=True, disabled=not is_connected)
+
+        if quick and job_text:
+            with st.spinner("Analyzing posting..."):
+                res = predict_job(job_text)
+                if res and res.get("success"):
+                    st.session_state.analysis_result = res
+                    st.session_state.analysis_type = "quick"
+                    add_to_history(job_text, res, "quick")
+
+        if detailed and job_text:
+            with st.spinner("Running detailed analysis..."):
+                res = get_explanation(job_text)
+                if res and res.get("success"):
+                    st.session_state.analysis_result = res
+                    st.session_state.analysis_type = "detailed"
+                    add_to_history(job_text, res, "detailed")
+
+        if (quick or detailed) and not job_text:
+            st.warning("Please paste a job posting to analyze.")
+
+        # Batch mode
+        with st.expander("📦 Batch Mode — Analyze Multiple Postings"):
+            st.markdown("""<p style='color:#64748B; font-size:0.85rem; margin:0 0 0.75rem'>
+            Separate postings with <code style='background:rgba(59,130,246,0.15); padding:1px 6px; border-radius:4px; color:#93C5FD'>---</code> on its own line.</p>""", unsafe_allow_html=True)
+            if st.button("Run Batch Analysis", use_container_width=True, disabled=not is_connected, key="batch_btn"):
+                if job_text:
+                    postings = [p.strip() for p in job_text.split("---") if p.strip() and len(p.strip()) > 10]
+                    if not postings:
+                        st.warning("No valid postings found.")
+                    elif len(postings) == 1:
+                        st.info("Only 1 posting detected. Use Quick Analysis instead.")
+                    elif len(postings) > 100:
+                        st.error("Max 100 postings per batch.")
+                    else:
+                        with st.spinner(f"Analyzing {len(postings)} postings..."):
+                            res = batch_predict(postings)
+                            if res and res.get("success"):
+                                st.success(f"Analyzed {res.get('total', len(postings))} postings")
+                                for pred in res.get("predictions", []):
+                                    idx = pred.get("index", 0) + 1
+                                    lbl = pred.get("label", "Unknown")
+                                    cf = pred.get("confidence", 0)
+                                    ico = "✅" if lbl == "Legitimate" else "⚠️"
+                                    clr = "#10B981" if lbl == "Legitimate" else "#EF4444"
+                                    st.markdown(f"**{ico} Posting {idx}:** <span style='color:{clr}'>{lbl}</span> ({cf}%)", unsafe_allow_html=True)
+
+        # Image upload
         if IMAGE_SUPPORT:
-            st.markdown("""<p style='color: #94a3b8; font-size: 0.9rem; margin: 0 0 1rem 0;'>
-                <strong>How to use:</strong> Upload a screenshot of a suspicious job posting.<br>
-                Supported formats: <code style='background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 4px; color: #60a5fa;'>PNG, JPG, JPEG</code>
-            </p>""", unsafe_allow_html=True)
-            
-            uploaded_file = st.file_uploader(
-                "Upload image (PNG, JPG, JPEG)",
-                type=['png', 'jpg', 'jpeg'],
-                key="ocr_upload",
-                label_visibility="collapsed"
-            )
-            
-            if uploaded_file is not None:
-                # Display the uploaded image
-                image = Image.open(uploaded_file)
-                st.image(image, caption="Uploaded Image")
-                
-                # Analysis buttons for image
-                col_img1, col_img2 = st.columns(2)
-                
-                with col_img1:
-                    img_quick = st.button("Quick Analysis", use_container_width=True, disabled=not is_connected, key="img_quick_btn")
-                
-                with col_img2:
-                    img_detailed = st.button("Detailed Analysis", use_container_width=True, disabled=not is_connected, key="img_detailed_btn")
-                
-                if img_quick or img_detailed:
-                    # Get image bytes
-                    uploaded_file.seek(0)
-                    image_bytes = uploaded_file.read()
-                    
-                    with st.spinner("Extracting text and analyzing..." if img_detailed else "Extracting text..."):
-                        result = explain_image(image_bytes)
-                        if result and result.get('success'):
-                            # Show extracted text info
-                            metadata = result.get('metadata', {})
-                            text_len = metadata.get('text_length', 0)
-                            extracted_text = metadata.get('extracted_text', '')
-                            st.success(f"✅ Extracted {text_len} characters from image")
-                            st.text_area("Extracted Text", extracted_text, height=150, disabled=True, key="extracted_text_display")
-                            # Store result - use appropriate type based on button clicked
-                            st.session_state.analysis_result = result
-                            st.session_state.analysis_type = 'detailed' if img_detailed else 'quick'
+            st.markdown("""<p style='color:#64748B; font-size:0.85rem; margin:0.75rem 0 0.5rem'>
+            📷 <strong style='color:#94A3B8'>Image Analysis</strong> — Upload a screenshot of a job posting</p>""", unsafe_allow_html=True)
+            uploaded = st.file_uploader("Upload image", type=["png", "jpg", "jpeg"], label_visibility="collapsed", key="ocr_upload")
+            if uploaded:
+                img = Image.open(uploaded)
+                st.image(img, caption="Uploaded Image", use_column_width=True)
+                ia, ib = st.columns(2)
+                with ia:
+                    iq = st.button("⚡ Quick", use_container_width=True, disabled=not is_connected, key="img_q")
+                with ib:
+                    idet = st.button("🔬 Detailed", use_container_width=True, disabled=not is_connected, key="img_d")
+                if iq or idet:
+                    uploaded.seek(0)
+                    with st.spinner("Extracting text and analyzing..."):
+                        res = explain_image_api(uploaded.read())
+                        if res and res.get("success"):
+                            meta = res.get("metadata", {})
+                            st.success(f"✅ Extracted {meta.get('text_length', 0)} characters")
+                            st.text_area("Extracted Text", meta.get("extracted_text", ""), height=120, disabled=True)
+                            st.session_state.analysis_result = res
+                            st.session_state.analysis_type = "detailed" if idet else "quick"
+                            add_to_history(meta.get("extracted_text", "image upload"), res, st.session_state.analysis_type)
                             st.rerun()
-                        elif result:
-                            st.error(f"Error: {result.get('error', 'Unknown error')}")
-                        else:
-                            st.error("Analysis failed. Check API connection.")
-    # === RIGHT COLUMN: Results Section ===
-    with col_results:
-        st.markdown(
-            '<div class="modern-card"><h3 style="margin:0;">Analysis Results</h3></div>',
-            unsafe_allow_html=True
-        )
-        
-        # Display results from session state
-        if st.session_state.analysis_result:
-            render_result(st.session_state.analysis_result)
-            
-            if st.session_state.analysis_type == 'detailed':
+
+    with col_out:
+        st.markdown('<div class="section-header">Results</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-title">Analysis Output</div>', unsafe_allow_html=True)
+
+        if st.session_state.get("analysis_result"):
+            render_verdict(st.session_state.analysis_result)
+            if st.session_state.get("analysis_type") == "detailed":
                 render_explanation(st.session_state.analysis_result)
         else:
-            placeholder_html = '''
-            <div class="placeholder-box">
-                <div class="placeholder-icon">🔍</div>
-                <p class="placeholder-text">Paste a job posting to get risk assessment guidance</p>
+            st.markdown("""
+            <div class="placeholder-wrap">
+                <div class="placeholder-icon">🛡️</div>
+                <div class="placeholder-txt">Paste a job posting and click Analyze<br>to get your risk assessment</div>
+            </div>""", unsafe_allow_html=True)
+
+
+# ─────────────────────────────────────────────────────────────
+# PAGE: HISTORY
+# ─────────────────────────────────────────────────────────────
+
+def page_history():
+    history = load_history()
+
+    st.markdown('<div class="section-header">Past Analyses</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Analysis History</div>', unsafe_allow_html=True)
+
+    if not history:
+        st.markdown("""
+        <div class="placeholder-wrap">
+            <div class="placeholder-icon">📋</div>
+            <div class="placeholder-txt">No analyses yet. Run an analysis to see history here.</div>
+        </div>""", unsafe_allow_html=True)
+        return
+
+    # Stats row
+    total = len(history)
+    fraud_count = sum(1 for h in history if h.get("is_fraudulent"))
+    legit_count = total - fraud_count
+    avg_conf = sum(h.get("confidence", 0) for h in history) / total if total else 0
+
+    sc1, sc2, sc3, sc4 = st.columns(4)
+    with sc1:
+        st.markdown(f"""<div class="mini-stat-box"><div class="mini-stat-val">{total}</div><div class="mini-stat-lbl">Total Analyses</div></div>""", unsafe_allow_html=True)
+    with sc2:
+        st.markdown(f"""<div class="mini-stat-box"><div class="mini-stat-val" style="color:#EF4444">{fraud_count}</div><div class="mini-stat-lbl">Flagged</div></div>""", unsafe_allow_html=True)
+    with sc3:
+        st.markdown(f"""<div class="mini-stat-box"><div class="mini-stat-val" style="color:#10B981">{legit_count}</div><div class="mini-stat-lbl">Safe</div></div>""", unsafe_allow_html=True)
+    with sc4:
+        st.markdown(f"""<div class="mini-stat-box"><div class="mini-stat-val">{avg_conf:.0f}%</div><div class="mini-stat-lbl">Avg Confidence</div></div>""", unsafe_allow_html=True)
+
+    st.markdown("<div style='height:1.5rem'></div>", unsafe_allow_html=True)
+
+    # Filter bar
+    fc1, fc2, fc3 = st.columns([2, 1, 1])
+    with fc1:
+        search = st.text_input("🔍 Search history", placeholder="Filter by keywords...", label_visibility="collapsed")
+    with fc2:
+        filter_type = st.selectbox("Filter", ["All", "Fraudulent", "Legitimate"], label_visibility="collapsed")
+    with fc3:
+        if st.button("🗑️ Clear All History", use_container_width=True):
+            clear_history()
+            st.success("History cleared!")
+            st.rerun()
+
+    # Filter
+    filtered = history
+    if filter_type == "Fraudulent":
+        filtered = [h for h in filtered if h.get("is_fraudulent")]
+    elif filter_type == "Legitimate":
+        filtered = [h for h in filtered if not h.get("is_fraudulent")]
+    if search:
+        sq = search.lower()
+        filtered = [h for h in filtered if sq in h.get("text_preview", "").lower() or sq in h.get("label", "").lower()]
+
+    st.caption(f"Showing {len(filtered)} of {total} entries")
+    st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
+
+    # Entry list
+    for i, entry in enumerate(filtered):
+        is_fraud = entry.get("is_fraudulent", False)
+        card_class = "fraud" if is_fraud else "legit"
+        badge = f'<span class="history-badge-fraud">⚠️ Fraudulent</span>' if is_fraud else f'<span class="history-badge-legit">✓ Legitimate</span>'
+        conf = entry.get("confidence", 0)
+        atype = entry.get("analysis_type", "quick").title()
+        timestamp = entry.get("timestamp", "")
+        preview = entry.get("text_preview", "")
+        signals = entry.get("fraud_signals", [])
+
+        with st.expander(f"{'🚨' if is_fraud else '✅'} {preview[:60]}...", expanded=False):
+            st.markdown(f"""
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+                <div style="display:flex; align-items:center; gap:0.75rem">
+                    {badge}
+                    <span style="background:rgba(59,130,246,0.15); color:#93C5FD; border:1px solid rgba(59,130,246,0.3); font-size:0.72rem; font-weight:600; padding:0.15rem 0.7rem; border-radius:999px">{atype}</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:1.25rem">
+                    <span class="history-conf">Confidence: {conf}%</span>
+                    <span class="history-time">{timestamp}</span>
+                </div>
             </div>
-            '''
-            st.markdown(placeholder_html, unsafe_allow_html=True)
-    
-    # === DISCLAIMER ===
-    disclaimer_html = '''
-    <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); 
-                border-radius: 12px; padding: 1.25rem; margin-top: 2rem; text-align: center;">
-        <div style="color: #93c5fd; font-weight: 600; margin-bottom: 0.5rem;">⚠️ Important Disclaimer</div>
-        <div style="color: #94a3b8; font-size: 0.9rem; line-height: 1.6;">
-            This tool provides risk assessment guidance only, not definitive fraud detection. 
-            Always verify job postings independently through official company websites, 
-            LinkedIn profiles, and trusted review sites before sharing personal information.
+            """, unsafe_allow_html=True)
+
+            probs = entry.get("probabilities", {})
+            p1, p2 = st.columns(2)
+            with p1:
+                st.markdown(f"**Fraud Risk:** <span style='color:#EF4444; font-family:DM Mono,monospace'>{probs.get('fraudulent', 0)}%</span>", unsafe_allow_html=True)
+            with p2:
+                st.markdown(f"**Safe Score:** <span style='color:#10B981; font-family:DM Mono,monospace'>{probs.get('legitimate', 0)}%</span>", unsafe_allow_html=True)
+
+            if signals:
+                st.markdown("**Red Flags:**")
+                pills = "".join(f'<span class="signal-pill">🚩 {s}</span>' for s in signals)
+                st.markdown(f"<div>{pills}</div>", unsafe_allow_html=True)
+
+            full_text = entry.get("full_text", "")
+            if full_text:
+                st.markdown("**Full Text:**")
+                st.text_area("", full_text, height=160, disabled=True, key=f"hist_text_{entry.get('id', i)}")
+
+            # Re-analyze button
+            if st.button(f"🔄 Re-Analyze", key=f"reanalyze_{entry.get('id', i)}"):
+                st.session_state.job_input = full_text
+                st.session_state.page = "analyze"
+                st.rerun()
+
+
+# ─────────────────────────────────────────────────────────────
+# MAIN
+# ─────────────────────────────────────────────────────────────
+
+def main():
+    load_css()
+
+    if "analysis_result" not in st.session_state:
+        st.session_state.analysis_result = None
+    if "analysis_type" not in st.session_state:
+        st.session_state.analysis_type = None
+    if "page" not in st.session_state:
+        st.session_state.page = "analyze"
+
+    is_connected = check_api()
+
+    # ── Nav ──
+    dot_class = "dot-green" if is_connected else "dot-red"
+    status_txt = "API Connected" if is_connected else "API Disconnected"
+    history = load_history()
+    hist_count = len(history)
+
+    st.markdown(f"""
+    <div class="nav-bar">
+        <div class="nav-logo">
+            <div class="nav-logo-icon">🛡️</div>
+            JobGuard AI
+        </div>
+        <div class="nav-status">
+            <span class="nav-status-dot {dot_class}"></span>{status_txt}
         </div>
     </div>
-    '''
-    st.markdown(disclaimer_html, unsafe_allow_html=True)
-    
-    # === FOOTER ===
-    st.markdown(
-        '<div class="footer-text">Your data is processed locally | Built with BERT & Streamlit | For educational purposes</div>',
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
+    # ── Page tabs ──
+    p1, p2, p3 = st.columns([1, 1, 8])
+    with p1:
+        if st.button(f"🔍 Analyze", use_container_width=True):
+            st.session_state.page = "analyze"
+    with p2:
+        if st.button(f"📋 History ({hist_count})", use_container_width=True):
+            st.session_state.page = "history"
 
-# =============================================================================
-# ENTRY POINT
-# =============================================================================
+    st.markdown("<div style='height:0.25rem; border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:2rem'></div>", unsafe_allow_html=True)
+
+    # ── Hero (only on analyze page) ──
+    if st.session_state.page == "analyze":
+        st.markdown("""
+        <div class="hero-section">
+            <div class="hero-grid"></div>
+            <div class="hero-badge">AI-Powered Detection System</div>
+            <h1 class="hero-title">Detect Fake Job<br><span>Postings Instantly</span></h1>
+            <p class="hero-sub">Hybrid BERT + Rule-Based analysis trained on 17,000+ job postings to protect you from recruitment scams.</p>
+            <div class="hero-stats">
+                <div><div class="hero-stat-num">97%+</div><div class="hero-stat-label">Accuracy</div></div>
+                <div><div class="hero-stat-num">8+</div><div class="hero-stat-label">Scam Types</div></div>
+                <div><div class="hero-stat-num">< 2s</div><div class="hero-stat-label">Analysis Time</div></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # ── Page content ──
+    if st.session_state.page == "analyze":
+        page_analyze(is_connected)
+    elif st.session_state.page == "history":
+        page_history()
+
+    # ── Disclaimer ──
+    st.markdown("""
+    <div class="disclaimer">
+        <strong style='color:#93C5FD'>⚠️ Disclaimer</strong><br>
+        JobGuard AI provides risk assessment guidance only — not definitive fraud detection.
+        Always verify job postings independently through official company websites and trusted review platforms.
+    </div>
+    """, unsafe_allow_html=True)
+
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,95 @@
+[
+  {
+    "id": "20260410131030965392",
+    "timestamp": "2026-04-10 13:10:30",
+    "text_preview": "Job Title: Junior Accountant\n\nCompany: Wipro\nLocation: Chennai\nSalary: \u20b93\u20136 LPA\n\n\ud83d\udcc4 Job Description:\n\nManage financial re...",
+    "full_text": "Job Title: Junior Accountant\n\nCompany: Wipro\nLocation: Chennai\nSalary: \u20b93\u20136 LPA\n\n\ud83d\udcc4 Job Description:\n\nManage financial records, prepare reports, and assist in audits.\n\n\ud83c\udfaf Requirements:\nB.Com / M.Com\nKnowledge of Tally and Excel",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.33,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.33,
+      "legitimate": 49.67
+    }
+  },
+  {
+    "id": "20260410131016194809",
+    "timestamp": "2026-04-10 13:10:16",
+    "text_preview": "Job Title: Junior Accountant\n\nCompany: Wipro\nLocation: Chennai\nSalary: \u20b93\u20136 LPA\n\n\ud83d\udcc4 Job Description:\n\nManage financial re...",
+    "full_text": "Job Title: Junior Accountant\n\nCompany: Wipro\nLocation: Chennai\nSalary: \u20b93\u20136 LPA\n\n\ud83d\udcc4 Job Description:\n\nManage financial records, prepare reports, and assist in audits.\n\n\ud83c\udfaf Requirements:\nB.Com / M.Com\nKnowledge of Tally and Excel",
+    "analysis_type": "quick",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.33,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.33,
+      "legitimate": 49.67
+    }
+  },
+  {
+    "id": "20260410114914655610",
+    "timestamp": "2026-04-10 11:49:14",
+    "text_preview": "Job Title: Data Analyst\n\nCompany: Tata Consultancy Services\nLocation: Hyderabad, India\nSalary: \u20b94\u20138 LPA\n\n\ud83d\udcc4 Job Descripti...",
+    "full_text": "Job Title: Data Analyst\n\nCompany: Tata Consultancy Services\nLocation: Hyderabad, India\nSalary: \u20b94\u20138 LPA\n\n\ud83d\udcc4 Job Description:\n\nAnalyze business data, generate insights, and support decision-making using tools like SQL, Excel, and Power BI.\n\n\ud83c\udfaf Requirements:\nBachelor\u2019s degree\nStrong analytical skills\nKnowledge of SQL\n\ud83d\udce9 Apply:\n\nApply via official TCS careers portal",
+    "analysis_type": "quick",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 52.12,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 52.12,
+      "legitimate": 47.88
+    }
+  },
+  {
+    "id": "20260410114834607214",
+    "timestamp": "2026-04-10 11:48:34",
+    "text_preview": "Job Title: Data Analyst\n\nCompany: Tata Consultancy Services\nLocation: Hyderabad, India\nSalary: \u20b94\u20138 LPA\n\n\ud83d\udcc4 Job Descripti...",
+    "full_text": "Job Title: Data Analyst\n\nCompany: Tata Consultancy Services\nLocation: Hyderabad, India\nSalary: \u20b94\u20138 LPA\n\n\ud83d\udcc4 Job Description:\n\nAnalyze business data, generate insights, and support decision-making using tools like SQL, Excel, and Power BI.\n\n\ud83c\udfaf Requirements:\nBachelor\u2019s degree\nStrong analytical skills\nKnowledge of SQL\n\ud83d\udce9 Apply:\n\nApply via official TCS careers portal",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 52.12,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 52.12,
+      "legitimate": 47.88
+    }
+  },
+  {
+    "id": "20260410114603309849",
+    "timestamp": "2026-04-10 11:46:03",
+    "text_preview": "Job Title: Software Engineer (Backend)\n\nCompany: Infosys\nLocation: Bangalore, India\nSalary: \u20b96\u201310 LPA\n\n\ud83d\udcc4 Job Description...",
+    "full_text": "Job Title: Software Engineer (Backend)\n\nCompany: Infosys\nLocation: Bangalore, India\nSalary: \u20b96\u201310 LPA\n\n\ud83d\udcc4 Job Description:\n\nWe are looking for a Backend Developer to design and develop scalable web applications. You will work with cross-functional teams to deliver high-quality software solutions.\n\n\ud83c\udfaf Requirements:\nB.Tech / B.E in Computer Science or related field\nExperience in Python / Java\nKnowledge of REST APIs and databases\n\ud83d\udcbc Benefits:\nHealth insurance\nPaid leave\nCareer growth opportunities\n\ud83d\udce9 Apply:\n\nApply through official careers page: https://www.infosys.com/careers",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 52.94,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 52.94,
+      "legitimate": 47.06
+    }
+  },
+  {
+    "id": "20260410110436041699",
+    "timestamp": "2026-04-10 11:04:36",
+    "text_preview": "Job Title: Amazon Product Reviewer (Part-Time)\n\nCompany: Amazon Hiring Team (Fake)\n\nLocation: Remote\n\nSalary: \u20b910,000/we...",
+    "full_text": "Job Title: Amazon Product Reviewer (Part-Time)\n\nCompany: Amazon Hiring Team (Fake)\n\nLocation: Remote\n\nSalary: \u20b910,000/week\n\nDescription:\nGet paid for reviewing products. We will send you products and you just need to give 5-star ratings.\n\nRequirement:\n\nNo experience needed\nAge 18+\n\nImportant:\nPay \u20b9999 to activate your account.\n\nContact: WhatsApp only",
+    "analysis_type": "quick",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 85.4,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "No experience/interview required"
+    ],
+    "probabilities": {
+      "fraudulent": 85.4,
+      "legitimate": 14.6
+    }
+  }
+]

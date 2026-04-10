@@ -1,0 +1,137 @@
+[
+  {
+    "id": "20260410140311449571",
+    "timestamp": "2026-04-10 14:03:11",
+    "text_preview": "Job Title: Software Engineer (Backend)\n\nCompany: Infosys\nLocation: Bangalore, India\nSalary: \u20b96\u201310 LPA\n\n\ud83d\udcc4 Job Description...",
+    "full_text": "Job Title: Software Engineer (Backend)\n\nCompany: Infosys\nLocation: Bangalore, India\nSalary: \u20b96\u201310 LPA\n\n\ud83d\udcc4 Job Description:\n\nWe are looking for a Backend Developer to design and develop scalable web applications. You will work with cross-functional teams to deliver high-quality software solutions.\n\n\ud83c\udfaf Requirements:\nB.Tech / B.E in Computer Science or related field\nExperience in Python / Java\nKnowledge of REST APIs and databases\n\ud83d\udcbc Benefits:\nHealth insurance\nPaid leave\nCareer growth opportunities\n\ud83d\udce9 Apply:\n\nApply through official careers page: https://www.infosys.com/careers",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.12,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.12,
+      "legitimate": 49.88
+    }
+  },
+  {
+    "id": "20260410140100779481",
+    "timestamp": "2026-04-10 14:01:00",
+    "text_preview": "Job Title: Software Engineer (Backend)\n\nCompany: Infosys\nLocation: Bangalore, India\nSalary: \u20b96\u201310 LPA\n\n\ud83d\udcc4 Job Description...",
+    "full_text": "Job Title: Software Engineer (Backend)\n\nCompany: Infosys\nLocation: Bangalore, India\nSalary: \u20b96\u201310 LPA\n\n\ud83d\udcc4 Job Description:\n\nWe are looking for a Backend Developer to design and develop scalable web applications. You will work with cross-functional teams to deliver high-quality software solutions.\n\n\ud83c\udfaf Requirements:\nB.Tech / B.E in Computer Science or related field\nExperience in Python / Java\nKnowledge of REST APIs and databases\n\ud83d\udcbc Benefits:\nHealth insurance\nPaid leave\nCareer growth opportunities\n\ud83d\udce9 Apply:\n\nApply through official careers page: https://www.infosys.com/careers",
+    "analysis_type": "quick",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.12,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.12,
+      "legitimate": 49.88
+    }
+  },
+  {
+    "id": "20260410135838023190",
+    "timestamp": "2026-04-10 13:58:38",
+    "text_preview": "Job Title: Customer Support Executive\n\nCompany: Amazon\nLocation: Remote / Bangalore\nSalary: \u20b93\u20135 LPA\n\ud83d\udcc4 Job Description:...",
+    "full_text": "Job Title: Customer Support Executive\n\nCompany: Amazon\nLocation: Remote / Bangalore\nSalary: \u20b93\u20135 LPA\n\ud83d\udcc4 Job Description:\nHandle customer queries via chat/email. Provide timely and accurate resolutions.\n\ud83c\udfaf Requirements:\nGood communication skills\nBasic computer knowledge\n\ud83d\udcbc Benefits:\nFixed salary\nPerformance bonus\nTraining provided",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 50.3,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 49.7,
+      "legitimate": 50.3
+    }
+  },
+  {
+    "id": "20260410135721925443",
+    "timestamp": "2026-04-10 13:57:21",
+    "text_preview": "Job Title: Customer Support Executive\n\nCompany: Amazon\nLocation: Remote / Bangalore\nSalary: \u20b93\u20135 LPA\n\n\ud83d\udcc4 Job Description:...",
+    "full_text": "Job Title: Customer Support Executive\n\nCompany: Amazon\nLocation: Remote / Bangalore\nSalary: \u20b93\u20135 LPA\n\n\ud83d\udcc4 Job Description:\n\nHandle customer queries via chat/email. Provide timely and accurate resolutions.\n\n\ud83c\udfaf Requirements:\nGood communication skills\nBasic computer knowledge\n\ud83d\udcbc Benefits:\nFixed salary\nPerformance bonus\nTraining provided",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 50.3,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 49.7,
+      "legitimate": 50.3
+    }
+  },
+  {
+    "id": "20260410134337979505",
+    "timestamp": "2026-04-10 13:43:37",
+    "text_preview": "Job Title: Junior Accountant\n\nCompany: Wipro\nLocation: Chennai\nSalary: \u20b93\u20136 LPA\n\n\ud83d\udcc4 Job Description:\n\nManage financial re...",
+    "full_text": "Job Title: Junior Accountant\n\nCompany: Wipro\nLocation: Chennai\nSalary: \u20b93\u20136 LPA\n\n\ud83d\udcc4 Job Description:\n\nManage financial records, prepare reports, and assist in audits.\n\n\ud83c\udfaf Requirements:\nB.Com / M.Com\nKnowledge of Tally and Excel",
+    "analysis_type": "quick",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.04,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.04,
+      "legitimate": 49.96
+    }
+  },
+  {
+    "id": "20260410134327093315",
+    "timestamp": "2026-04-10 13:43:27",
+    "text_preview": "Company: Amazon\nLocation: Remote / Bangalore\nSalary: \u20b93\u20135 LPA\n\n\ud83d\udcc4 Job Description:\n\nHandle customer queries via chat/emai...",
+    "full_text": "Company: Amazon\nLocation: Remote / Bangalore\nSalary: \u20b93\u20135 LPA\n\n\ud83d\udcc4 Job Description:\n\nHandle customer queries via chat/email. Provide timely and accurate resolutions.\n\n\ud83c\udfaf Requirements:\nGood communication skills\nBasic computer knowledge\n\ud83d\udcbc Benefits:\nFixed salary\nPerformance bonus\nTraining provided",
+    "analysis_type": "quick",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 50.27,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 49.73,
+      "legitimate": 50.27
+    }
+  },
+  {
+    "id": "20260410134012101217",
+    "timestamp": "2026-04-10 13:40:12",
+    "text_preview": "Company: Amazon\nLocation: Remote / Bangalore\nSalary: \u20b93\u20135 LPA\n\n\ud83d\udcc4 Job Description:\n\nHandle customer queries via chat/emai...",
+    "full_text": "Company: Amazon\nLocation: Remote / Bangalore\nSalary: \u20b93\u20135 LPA\n\n\ud83d\udcc4 Job Description:\n\nHandle customer queries via chat/email. Provide timely and accurate resolutions.\n\n\ud83c\udfaf Requirements:\nGood communication skills\nBasic computer knowledge\n\ud83d\udcbc Benefits:\nFixed salary\nPerformance bonus\nTraining provided",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 50.27,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 49.73,
+      "legitimate": 50.27
+    }
+  },
+  {
+    "id": "20260410133958215542",
+    "timestamp": "2026-04-10 13:39:58",
+    "text_preview": "Company: Amazon\nLocation: Remote / Bangalore\nSalary: \u20b93\u20135 LPA\n\n\ud83d\udcc4 Job Description:\n\nHandle customer queries via chat/emai...",
+    "full_text": "Company: Amazon\nLocation: Remote / Bangalore\nSalary: \u20b93\u20135 LPA\n\n\ud83d\udcc4 Job Description:\n\nHandle customer queries via chat/email. Provide timely and accurate resolutions.\n\n\ud83c\udfaf Requirements:\nGood communication skills\nBasic computer knowledge\n\ud83d\udcbc Benefits:\nFixed salary\nPerformance bonus\nTraining provided",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 50.27,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 49.73,
+      "legitimate": 50.27
+    }
+  },
+  {
+    "id": "20260410133814079342",
+    "timestamp": "2026-04-10 13:38:14",
+    "text_preview": "Job Title: Software Engineer (Backend)\nCompany: Infosys\nLocation: Bangalore, India\nSalary: \u20b96\u201310 LPA\n\ud83d\udcc4 Job Description:...",
+    "full_text": "Job Title: Software Engineer (Backend)\nCompany: Infosys\nLocation: Bangalore, India\nSalary: \u20b96\u201310 LPA\n\ud83d\udcc4 Job Description:\nWe are looking for a Backend Developer to design and develop scalable web applications. You will work with cross-functional teams to deliver high-quality software solutions.\n\ud83c\udfaf Requirements:\nB.Tech / B.E in Computer Science or related field\nExperience in Python / Java\nKnowledge of REST APIs and databases\n\ud83d\udcbc Benefits:\nHealth insurance\nPaid leave\nCareer growth opportunities\n\ud83d\udce9 Apply:\nApply through official careers page: https://www.infosys.com/careers",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.12,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.12,
+      "legitimate": 49.88
+    }
+  }
+]
