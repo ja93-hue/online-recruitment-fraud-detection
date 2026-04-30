@@ -1,5 +1,401 @@
 [
   {
+    "id": "20260417143440681712",
+    "timestamp": "2026-04-17 14:34:40",
+    "text_preview": "Title: Marketing Specialist\nCompany Profile: Acme Corp is a well-established consumer goods company with over 50 years i...",
+    "full_text": "Title: Marketing Specialist\nCompany Profile: Acme Corp is a well-established consumer goods company with over 50 years in the industry.\nDescription: Plan and execute marketing campaigns, analyze market trends, and coordinate with sales teams.\nRequirements: Bachelor\u2019s degree in Marketing, excellent communication skills, proficiency in MS Office.\nBenefits: Health and dental insurance, annual bonus, flexible working hours.",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 51.22,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 48.78,
+      "legitimate": 51.22
+    },
+    "bert_raw": {
+      "fraudulent": 48.78,
+      "legitimate": 51.22
+    },
+    "bert_estimate": 48.8
+  },
+  {
+    "id": "20260417142842860761",
+    "timestamp": "2026-04-17 14:28:42",
+    "text_preview": "Title: Software Engineer\nCompany Profile: Google is a global leader in technology and innovation.\nDescription: Develop a...",
+    "full_text": "Title: Software Engineer\nCompany Profile: Google is a global leader in technology and innovation.\nDescription: Develop and maintain scalable backend systems. Collaborate with cross-functional teams to deliver high-quality software solutions.\nRequirements: Bachelor\u2019s degree in Computer Science or related field, 2+ years of experience in Python and Java, strong problem-solving skills.\nBenefits: Competitive salary, health insurance, 401(k), paid time off, on-site gym.",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 51.37,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 48.63,
+      "legitimate": 51.37
+    },
+    "bert_raw": {
+      "fraudulent": 48.63,
+      "legitimate": 51.37
+    },
+    "bert_estimate": 48.6
+  },
+  {
+    "id": "20260417140844099949",
+    "timestamp": "2026-04-17 14:08:44",
+    "text_preview": "Job Title: Sales Executive\n\ud83c\udfe2 Company: Reliance Retail\n\ud83d\udccd Location: Anantapur, Andhra Pradesh\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc About Co...",
+    "full_text": "Job Title: Sales Executive\n\ud83c\udfe2 Company: Reliance Retail\n\ud83d\udccd Location: Anantapur, Andhra Pradesh\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc About Company\n\nReliance Retail is India\u2019s largest retail chain, part of Reliance Industries.\n\n\ud83c\udfaf Job Description\n\nResponsible for store sales, customer engagement, and inventory support.\n\n\ud83d\udee0\ufe0f Responsibilities\nAssist customers\nMaintain product displays\nAchieve sales targets\n\ud83c\udf93 Requirements\n10+2 or graduate\nCommunication skills\n\ud83d\udcb0 Salary\n\n\u20b92 \u2013 \u20b93.5 LPA",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 56.46,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 43.54,
+      "legitimate": 56.46
+    },
+    "bert_raw": {
+      "fraudulent": 43.54,
+      "legitimate": 56.46
+    },
+    "bert_estimate": 43.5
+  },
+  {
+    "id": "20260417105713556159",
+    "timestamp": "2026-04-17 10:57:13",
+    "text_preview": "Company: ClickEarn Pvt Ltd (Fake)\n\ud83c\udfaf Job Description\n\nComplete simple online tasks and earn \u20b95,000 daily. Tasks include l...",
+    "full_text": "Company: ClickEarn Pvt Ltd (Fake)\n\ud83c\udfaf Job Description\n\nComplete simple online tasks and earn \u20b95,000 daily. Tasks include liking videos and reviewing products.\n\n\ud83d\udcb0 Earnings\n\n\u20b95,000/day",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 56.86,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 43.14,
+      "legitimate": 56.86
+    },
+    "bert_raw": {
+      "fraudulent": 43.14,
+      "legitimate": 56.86
+    },
+    "bert_estimate": 43.1
+  },
+  {
+    "id": "20260417105610508750",
+    "timestamp": "2026-04-17 10:56:10",
+    "text_preview": "Job Title: HR Executive\n\ud83c\udfe2 Company: Infosys Pvt Ltd (Fake usage of real name)\n\ud83d\udccd Location: Remote\n\ud83c\udfaf Job Description\n\nWe ar...",
+    "full_text": "Job Title: HR Executive\n\ud83c\udfe2 Company: Infosys Pvt Ltd (Fake usage of real name)\n\ud83d\udccd Location: Remote\n\ud83c\udfaf Job Description\n\nWe are hiring urgently for HR Executive roles. Immediate joining. No interview required.\n\n\ud83d\udcb0 Salary\n\n\u20b940,000/month",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 55.0,
+    "fraud_signals": [
+      "No experience/interview required"
+    ],
+    "probabilities": {
+      "fraudulent": 55.0,
+      "legitimate": 45.0
+    },
+    "bert_raw": {
+      "fraudulent": 43.26,
+      "legitimate": 56.74
+    },
+    "bert_estimate": 43.3
+  },
+  {
+    "id": "20260417105547218508",
+    "timestamp": "2026-04-17 10:55:47",
+    "text_preview": "Job Title: HR Executive\n\ud83c\udfe2 Company: Infosys Pvt Ltd (Fake usage of real name)\n\ud83d\udccd Location: Remote\n\ud83c\udfaf Job Description\n\nWe ar...",
+    "full_text": "Job Title: HR Executive\n\ud83c\udfe2 Company: Infosys Pvt Ltd (Fake usage of real name)\n\ud83d\udccd Location: Remote\n\ud83c\udfaf Job Description\n\nWe are hiring urgently for HR Executive roles. Immediate joining. No interview required.\n\n\ud83d\udcb0 Salary\n\n\u20b940,000/month",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 55.0,
+    "fraud_signals": [
+      "No experience/interview required"
+    ],
+    "probabilities": {
+      "fraudulent": 55.0,
+      "legitimate": 45.0
+    },
+    "bert_raw": {
+      "fraudulent": 43.26,
+      "legitimate": 56.74
+    },
+    "bert_estimate": 43.3
+  },
+  {
+    "id": "20260417105435813031",
+    "timestamp": "2026-04-17 10:54:35",
+    "text_preview": "Job Title: Work From Home Data Entry\n\ud83c\udfe2 Company: Global Data Solutions (Fake)\n\ud83d\udccd Location: Remote\n\ud83d\udcbc Type: Part-Time\n\ud83c\udfaf Job...",
+    "full_text": "Job Title: Work From Home Data Entry\n\ud83c\udfe2 Company: Global Data Solutions (Fake)\n\ud83d\udccd Location: Remote\n\ud83d\udcbc Type: Part-Time\n\ud83c\udfaf Job Description\n\nEarn \u20b930,000\u2013\u20b950,000 per week by doing simple data entry work from home. No experience required. Limited vacancies!\n\n\ud83d\udee0\ufe0f Responsibilities\nCopy-paste work\nSimple typing tasks\n\ud83c\udf93 Requirements\nBasic computer knowledge\nSmartphone/laptop\n\ud83d\udcb0 Salary\n\n\u20b930,000\u2013\u20b950,000 per week",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 55.0,
+    "fraud_signals": [
+      "No experience/interview required"
+    ],
+    "probabilities": {
+      "fraudulent": 55.0,
+      "legitimate": 45.0
+    },
+    "bert_raw": {
+      "fraudulent": 43.34,
+      "legitimate": 56.66
+    },
+    "bert_estimate": 43.3
+  },
+  {
+    "id": "20260417105206890196",
+    "timestamp": "2026-04-17 10:52:06",
+    "text_preview": "Job Title: Junior Clerk\n\ud83c\udfe2 Organization: Staff Selection Commission (SSC)\n\ud83d\udccd Location: Across India\n\ud83d\udcbc Type: Government Job...",
+    "full_text": "Job Title: Junior Clerk\n\ud83c\udfe2 Organization: Staff Selection Commission (SSC)\n\ud83d\udccd Location: Across India\n\ud83d\udcbc Type: Government Job\n\ud83d\udccc About Organization\n\nSSC conducts recruitment for various government departments under the Government of India.\n\n\ud83c\udfaf Job Description\n\nClerical role involving documentation, data entry, and office assistance.\n\n\ud83d\udee0\ufe0f Responsibilities\nMaintain records\nData entry\nAssist in administrative work\n\ud83c\udf93 Requirements\n12th pass\nBasic computer knowledge\n\ud83d\udcb0 Salary\n\n\u20b919,900 \u2013 \u20b963,200 (as per pay level)\n\n\ud83e\uddfe Selection Process\nTier-1 exam\nTier-2 exam\nDocument verification",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 55.98,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 44.02,
+      "legitimate": 55.98
+    },
+    "bert_raw": {
+      "fraudulent": 44.02,
+      "legitimate": 55.98
+    },
+    "bert_estimate": 44.0
+  },
+  {
+    "id": "20260417103235394696",
+    "timestamp": "2026-04-17 10:32:35",
+    "text_preview": "Company: Accenture\n\ud83d\udccd Location: Hyderabad, India\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc About Company\n\nAccenture is a multinational professi...",
+    "full_text": "Company: Accenture\n\ud83d\udccd Location: Hyderabad, India\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc About Company\n\nAccenture is a multinational professional services company operating in more than 120 countries.\n\n\ud83c\udfaf Job Description\n\nLooking for Business Analysts to bridge business needs and technical solutions.\n\n\ud83d\udee0\ufe0f Responsibilities\nGather requirements\nCreate documentation\nWork with stakeholders\nAnalyze business data\n\ud83c\udf93 Requirements\nAny graduate (MBA preferred)\nAnalytical thinking\nCommunication skills\n\ud83d\udcb0 Salary\n\n\u20b95 \u2013 \u20b98 LPA\n\n\ud83e\uddfe Hiring Process\nOnline application\nAssessment\nInterviews",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 56.13,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 43.87,
+      "legitimate": 56.13
+    },
+    "bert_raw": {
+      "fraudulent": 43.87,
+      "legitimate": 56.13
+    }
+  },
+  {
+    "id": "20260417103115827468",
+    "timestamp": "2026-04-17 10:31:15",
+    "text_preview": "Job Title: Associate Software Engineer\n\ud83c\udfe2 Company: Wipro Limited\n\ud83d\udccd Location: Bengaluru, India\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc About C...",
+    "full_text": "Job Title: Associate Software Engineer\n\ud83c\udfe2 Company: Wipro Limited\n\ud83d\udccd Location: Bengaluru, India\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc About Company\n\nWipro Limited is a global IT services company listed on NSE and NYSE, providing consulting and digital transformation services.\n\n\ud83c\udfaf Job Description\n\nHiring entry-level engineers to develop, test, and maintain enterprise applications.\n\n\ud83d\udee0\ufe0f Responsibilities\nWrite clean and efficient code\nPerform unit testing\nDebug and fix issues\nCollaborate with cross-functional teams\n\ud83c\udf93 Requirements\nB.Tech/B.E (CS/IT preferred)\nKnowledge of Java/Python\nUnderstanding of SDLC\n\ud83d\udcb0 Salary\n\n\u20b93.5 \u2013 \u20b95 LPA\n\n\ud83e\uddfe Hiring Process\nOnline aptitude test\nTechnical interview\nHR round",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 56.64,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 43.36,
+      "legitimate": 56.64
+    },
+    "bert_raw": {
+      "fraudulent": 43.36,
+      "legitimate": 56.64
+    }
+  },
+  {
+    "id": "20260417095437263985",
+    "timestamp": "2026-04-17 09:54:37",
+    "text_preview": "Job Title: Banking Operations Executive\n\ud83c\udfe2 Company: HDFC Bank Ltd.\n\ud83d\udccd Location: Vijayawada, Andhra Pradesh\n\ud83d\udcbc Type: Full-Ti...",
+    "full_text": "Job Title: Banking Operations Executive\n\ud83c\udfe2 Company: HDFC Bank Ltd.\n\ud83d\udccd Location: Vijayawada, Andhra Pradesh\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc About Company\n\nHDFC Bank is one of India\u2019s leading private sector banks regulated by RBI.\n\n\ud83c\udfaf Job Description\n\nHandle customer accounts, transactions, and support banking operations.\n\n\ud83d\udee0\ufe0f Responsibilities\nAccount handling\nCustomer interaction\nTransaction processing\n\ud83c\udf93 Requirements\nAny graduate\nGood communication\nBasic banking knowledge\n\ud83d\udcb0 Salary\n\n\u20b92.8 \u2013 \u20b94 LPA",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.2,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.2,
+      "legitimate": 49.8
+    },
+    "bert_raw": {
+      "fraudulent": 50.2,
+      "legitimate": 49.8
+    }
+  },
+  {
+    "id": "20260417091813801846",
+    "timestamp": "2026-04-17 09:18:13",
+    "text_preview": "Job Title: Banking Operations Executive\n\ud83c\udfe2 Company: HDFC Bank Ltd.\n\ud83d\udccd Location: Vijayawada, Andhra Pradesh\n\ud83d\udcbc Type: Full-Ti...",
+    "full_text": "Job Title: Banking Operations Executive\n\ud83c\udfe2 Company: HDFC Bank Ltd.\n\ud83d\udccd Location: Vijayawada, Andhra Pradesh\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc About Company\n\nHDFC Bank is one of India\u2019s leading private sector banks regulated by RBI.\n\n\ud83c\udfaf Job Description\n\nHandle customer accounts, transactions, and support banking operations.\n\n\ud83d\udee0\ufe0f Responsibilities\nAccount handling\nCustomer interaction\nTransaction processing\n\ud83c\udf93 Requirements\nAny graduate\nGood communication\nBasic banking knowledge\n\ud83d\udcb0 Salary\n\n\u20b92.8 \u2013 \u20b94 LPA",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.2,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.2,
+      "legitimate": 49.8
+    },
+    "bert_raw": {
+      "fraudulent": 50.2,
+      "legitimate": 49.8
+    }
+  },
+  {
+    "id": "20260417091650700647",
+    "timestamp": "2026-04-17 09:16:50",
+    "text_preview": "\ud83e\uddd1\u200d\ud83d\udcbb Job Title: QA Engineer\n\ud83c\udfe2 Company: Freshworks Inc.\n\ud83d\udccd Location: Chennai\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc About Company\n\nFreshworks...",
+    "full_text": "\ud83e\uddd1\u200d\ud83d\udcbb Job Title: QA Engineer\n\ud83c\udfe2 Company: Freshworks Inc.\n\ud83d\udccd Location: Chennai\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc About Company\n\nFreshworks is a NASDAQ-listed SaaS company providing customer engagement software.\n\n\ud83c\udfaf Job Description\n\nHiring QA Engineers to ensure high-quality SaaS product releases.\n\n\ud83d\udee0\ufe0f Responsibilities\nAutomation testing\nAPI testing\nPerformance testing\n\ud83c\udf93 Requirements\nExperience with Selenium/Postman\nKnowledge of testing frameworks\n\ud83d\udcb0 Salary\n\n\u20b96 \u2013 \u20b910 LPA",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 50.08,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 49.92,
+      "legitimate": 50.08
+    },
+    "bert_raw": {
+      "fraudulent": 49.92,
+      "legitimate": 50.08
+    }
+  },
+  {
+    "id": "20260416222725836570",
+    "timestamp": "2026-04-16 22:27:25",
+    "text_preview": "Job Title: Banking Operations Executive\n\ud83c\udfe2 Company: HDFC Bank Ltd.\n\ud83d\udccd Location: Vijayawada, Andhra Pradesh\n\ud83d\udcbc Type: Full-Ti...",
+    "full_text": "Job Title: Banking Operations Executive\n\ud83c\udfe2 Company: HDFC Bank Ltd.\n\ud83d\udccd Location: Vijayawada, Andhra Pradesh\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc About Company\n\nHDFC Bank is one of India\u2019s leading private sector banks regulated by RBI.\n\n\ud83c\udfaf Job Description\n\nHandle customer accounts, transactions, and support banking operations.\n\n\ud83d\udee0\ufe0f Responsibilities\nAccount handling\nCustomer interaction\nTransaction processing\n\ud83c\udf93 Requirements\nAny graduate\nGood communication\nBasic banking knowledge\n\ud83d\udcb0 Salary\n\n\u20b92.8 \u2013 \u20b94 LPA",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.36,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.36,
+      "legitimate": 49.64
+    }
+  },
+  {
+    "id": "20260416222620396872",
+    "timestamp": "2026-04-16 22:26:20",
+    "text_preview": "Job Title: Backend Developer Intern\n\ud83c\udfe2 Company: Zoho Corporation\n\ud83d\udccd Location: Chennai / Remote\n\ud83d\udcbc Type: Internship (6 month...",
+    "full_text": "Job Title: Backend Developer Intern\n\ud83c\udfe2 Company: Zoho Corporation\n\ud83d\udccd Location: Chennai / Remote\n\ud83d\udcbc Type: Internship (6 months)\n\ud83d\udccc About Company\n\nZoho Corporation is a well-known SaaS company headquartered in Chennai.\n\n\ud83c\udfaf Job Description\n\nLooking for backend developer interns to work on scalable web applications.\n\n\ud83d\udee0\ufe0f Responsibilities\nDevelop REST APIs\nWork with databases (MySQL/PostgreSQL)\nDebug backend services\n\ud83c\udf93 Requirements\nStrong programming in Python/Java\nUnderstanding of APIs\nProblem-solving skills\n\ud83d\udcb0 Stipend\n\n\u20b915,000/month\n\n\ud83e\uddfe Hiring Process\nOnline coding test\nTechnical interview\nFinal discussion",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.23,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.23,
+      "legitimate": 49.77
+    }
+  },
+  {
+    "id": "20260416222517146006",
+    "timestamp": "2026-04-16 22:25:17",
+    "text_preview": "Job Title: Data Analyst \u2013 Entry Level\n\ud83c\udfe2 Company: Tata Consultancy Services (TCS)\n\ud83d\udccd Location: Hyderabad, India\n\ud83d\udcbc Type: Fu...",
+    "full_text": "Job Title: Data Analyst \u2013 Entry Level\n\ud83c\udfe2 Company: Tata Consultancy Services (TCS)\n\ud83d\udccd Location: Hyderabad, India\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc About Company\n\nTCS is part of the Tata Group and one of the largest IT services companies globally.\n\n\ud83c\udfaf Job Description\n\nSeeking Data Analysts to support business intelligence and reporting functions.\n\n\ud83d\udee0\ufe0f Responsibilities\nAnalyze structured datasets\nCreate dashboards (Power BI/Tableau)\nSupport business teams with insights\n\ud83c\udf93 Requirements\nGraduate in Computer Science/Statistics\nKnowledge of SQL, Excel\nAnalytical skills\n\ud83d\udcb0 Salary\n\n\u20b94 \u2013 \u20b96 LPA\n\n\ud83e\uddfe Hiring Process\nApply via TCS NextStep Portal\nAptitude test\nTechnical + HR interview",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 50.26,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 49.74,
+      "legitimate": 50.26
+    }
+  },
+  {
+    "id": "20260416222257706623",
+    "timestamp": "2026-04-16 22:22:57",
+    "text_preview": "Job Title: Junior Software Tester\n\ud83c\udfe2 Company: Infosys Limited\n\ud83d\udccd Location: Mysuru, Karnataka, India\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc Ab...",
+    "full_text": "Job Title: Junior Software Tester\n\ud83c\udfe2 Company: Infosys Limited\n\ud83d\udccd Location: Mysuru, Karnataka, India\n\ud83d\udcbc Type: Full-Time\n\ud83d\udccc About the Company\nInfosys Limited is a publicly listed company on NSE and BSE, providing IT consulting and services globally.\n\ud83c\udfaf Job Description\nWe are hiring entry-level Software Testers to join our Quality Assurance team. Candidates will work on enterprise applications and ensure product quality through structured testing methodologies.\n\ud83d\udee0\ufe0f Responsibilities\nDesign and execute manual test cases\nPerform regression and system testing\nLog defects in tools like JIRA\nWork with development teams for bug resolution\n\ud83c\udf93 Requirements\nB.E./B.Tech (CS/IT or related)\nKnowledge of SDLC & STLC\nBasic understanding of testing tools\n\ud83d\udcb0 Salary\n\u20b93.2 \u2013 \u20b94.5 LPA\n\ud83e\uddfe Application Process\nApply via official careers page\nOnline assessment\nTechnical interview\nHR interview",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.45,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.45,
+      "legitimate": 49.55
+    }
+  },
+  {
+    "id": "20260416221834781715",
+    "timestamp": "2026-04-16 22:18:34",
+    "text_preview": "Company: QuickServe Solutions\n\ud83d\udccd Location: Hyderabad (Hybrid)\n\ud83d\udcbc Type: Full-time\n\ud83d\udccc About Company\nQuickServe provides custo...",
+    "full_text": "Company: QuickServe Solutions\n\ud83d\udccd Location: Hyderabad (Hybrid)\n\ud83d\udcbc Type: Full-time\n\ud83d\udccc About Company\nQuickServe provides customer support outsourcing services for e-commerce companies.\n\ud83c\udfaf Job Role\nHandle customer queries via calls, chat, and email.\n\ud83d\udee0\ufe0f Responsibilities\nResolve customer issues\nMaintain records\nEscalate complex queries\n\ud83c\udf93 Requirements\nGood communication skills\nBasic computer knowledge\n\ud83d\udcb0 Salary\n\u20b92.5\u20133.5 LPA\n",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.06,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.06,
+      "legitimate": 49.94
+    }
+  },
+  {
+    "id": "20260416221648133618",
+    "timestamp": "2026-04-16 22:16:48",
+    "text_preview": "2. Frontend Developer (Fresher)\n\ud83e\uddd1\u200d\ud83d\udcbb Company: WebCraft Technologies\n\ud83d\udccd Location: Chennai (On-site)\n\ud83d\udcbc Type: Full-time\n\ud83d\udccc Abo...",
+    "full_text": "2. Frontend Developer (Fresher)\n\ud83e\uddd1\u200d\ud83d\udcbb Company: WebCraft Technologies\n\ud83d\udccd Location: Chennai (On-site)\n\ud83d\udcbc Type: Full-time\n\ud83d\udccc About Company\n\nWebCraft Technologies builds modern web applications for startups and enterprises.\n\n\ud83c\udfaf Job Role\n\nHiring a Frontend Developer to build responsive UI using modern frameworks.\n\n\ud83d\udee0\ufe0f Responsibilities\nDevelop UI using HTML, CSS, JavaScript\nWork with React.js\nCollaborate with backend team\nFix UI bugs\n\ud83c\udf93 Requirements\nKnowledge of React.js\nUnderstanding of responsive design\nBasic Git knowledge\n\ud83d\udcb0 Salary\n\n\u20b93\u20135 LPA",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.2,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.2,
+      "legitimate": 49.8
+    }
+  },
+  {
+    "id": "20260416221639419469",
+    "timestamp": "2026-04-16 22:16:39",
+    "text_preview": "2. Frontend Developer (Fresher)\n\ud83e\uddd1\u200d\ud83d\udcbb Company: WebCraft Technologies\n\ud83d\udccd Location: Chennai (On-site)\n\ud83d\udcbc Type: Full-time\n\ud83d\udccc Abo...",
+    "full_text": "2. Frontend Developer (Fresher)\n\ud83e\uddd1\u200d\ud83d\udcbb Company: WebCraft Technologies\n\ud83d\udccd Location: Chennai (On-site)\n\ud83d\udcbc Type: Full-time\n\ud83d\udccc About Company\n\nWebCraft Technologies builds modern web applications for startups and enterprises.\n\n\ud83c\udfaf Job Role\n\nHiring a Frontend Developer to build responsive UI using modern frameworks.\n\n\ud83d\udee0\ufe0f Responsibilities\nDevelop UI using HTML, CSS, JavaScript\nWork with React.js\nCollaborate with backend team\nFix UI bugs\n\ud83c\udf93 Requirements\nKnowledge of React.js\nUnderstanding of responsive design\nBasic Git knowledge\n\ud83d\udcb0 Salary\n\n\u20b93\u20135 LPA",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.2,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.2,
+      "legitimate": 49.8
+    }
+  },
+  {
+    "id": "20260416221415431171",
+    "timestamp": "2026-04-16 22:14:15",
+    "text_preview": "1. Data Analyst Intern\n\ud83e\uddd1\u200d\ud83d\udcbc Company: Insight Analytics Pvt. Ltd.\n\ud83d\udccd Location: Bengaluru (Remote Available)\n\ud83d\udcbc Type: Interns...",
+    "full_text": "1. Data Analyst Intern\n\ud83e\uddd1\u200d\ud83d\udcbc Company: Insight Analytics Pvt. Ltd.\n\ud83d\udccd Location: Bengaluru (Remote Available)\n\ud83d\udcbc Type: Internship (6 months)\n\ud83d\udccc About Company\n\nInsight Analytics is a well-established data consulting firm helping businesses make data-driven decisions.\n\n\ud83c\udfaf Job Role\n\nWe are looking for a Data Analyst Intern to support data cleaning, visualization, and reporting tasks.\n\n\ud83d\udee0\ufe0f Responsibilities\nAnalyze datasets using Excel/Python\nCreate dashboards using Power BI/Tableau\nGenerate weekly reports\nAssist senior analysts\n\ud83c\udf93 Requirements\nBasic knowledge of Excel, SQL, Python\nStrong analytical thinking\nGood communication\n\ud83d\udcb0 Stipend\n\n\u20b910,000/month",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.17,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.17,
+      "legitimate": 49.83
+    }
+  },
+  {
+    "id": "20260416221215973080",
+    "timestamp": "2026-04-16 22:12:15",
+    "text_preview": "\u2705 Safe & Trusted Job Description (Sample)\n\ud83e\uddd1\u200d\ud83d\udcbb Job Title: Software Testing Intern\n\ud83c\udfe2 Company: TechNova Solutions Pvt. Ltd....",
+    "full_text": "\u2705 Safe & Trusted Job Description (Sample)\n\ud83e\uddd1\u200d\ud83d\udcbb Job Title: Software Testing Intern\n\ud83c\udfe2 Company: TechNova Solutions Pvt. Ltd.\n\ud83d\udccd Location: Hyderabad, India (Remote/Hybrid)\n\ud83d\udcbc Job Type: Internship (3\u20136 months)\n\ud83d\udccc About the Company\n\nTechNova Solutions is a registered IT services company specializing in web development, cloud solutions, and AI-based applications. We work with clients across India and globally, ensuring high-quality and secure software delivery.\n\n\ud83c\udfaf Job Description\n\nWe are looking for a motivated Software Testing Intern to join our QA team. The candidate will assist in testing web applications, identifying bugs, and ensuring product quality before deployment.\n\n\ud83d\udee0\ufe0f Responsibilities\nPerform manual testing on web applications\nWrite and execute test cases\nReport bugs using tools like Jira\nCollaborate with developers to fix issues\nAssist in regression and functional testing\n\ud83c\udf93 Requirements\nBasic knowledge of Software Testing concepts\nFamiliarity with SDLC and STLC\nUnderstanding of bug lifecycle\nGood communication skills\nPursuing or completed a degree in Computer Science or related field\n\ud83d\udcb0 Stipend\n\n\u20b98,000 \u2013 \u20b912,000 per month\n\n\ud83d\udd52 Working Hours\n\nFlexible (5 days a week)",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 50.51,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 50.51,
+      "legitimate": 49.49
+    }
+  },
+  {
     "id": "20260410131030965392",
     "timestamp": "2026-04-10 13:10:30",
     "text_preview": "Job Title: Junior Accountant\n\nCompany: Wipro\nLocation: Chennai\nSalary: \u20b93\u20136 LPA\n\n\ud83d\udcc4 Job Description:\n\nManage financial re...",
