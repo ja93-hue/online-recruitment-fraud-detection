@@ -1257,41 +1257,37 @@ class JobFraudDetector:
         fraud_signals = fraud_detection['signals']
         fraud_score = fraud_detection['score']
         
-        # === HYBRID DETECTION STRATEGY ===
-        # Rules = Definitive fraud indicators (emails, fees, gift cards)
+        # === HYBRID DETECTION STRATEGY (Soft Blend) ===
+        # Rules = Definitive fraud indicators (fees, gift cards, personal emails)
         # BERT = Catches subtle/sophisticated scams that bypass rules
-        
+        # Both always contribute — rules scale the blend weight, never fully replace BERT.
+
         bert_fraud_prob = float(probabilities[1])
         bert_legit_prob = float(probabilities[0])
-        
+
         if fraud_score > 0:
-            # RULES TRIGGERED: Definitive fraud indicators found
-            # These are hard evidence (upfront fees, personal emails, etc.)
-            
-            if fraud_score >= 0.5:
-                # Strong rule signals = definitely fraud
-                # Scale confidence based on how many signals found
-                final_fraud_prob = min(0.70 + (fraud_score * 0.28), 0.98)
-            elif fraud_score >= 0.25:
-                # Moderate signals = likely fraud
-                final_fraud_prob = min(0.60 + (fraud_score * 0.3), 0.90)
-            else:
-                # Weak signals = suspicious, combine with BERT
-                # If BERT also suspects fraud, increase confidence
-                final_fraud_prob = max(0.55, bert_fraud_prob + (fraud_score * 0.2))
-            
+            # RULES TRIGGERED: blend rules with BERT so both have a real vote.
+            #
+            # alpha = rule weight (how much rules dominate)
+            # Scales from 0.5 (weak signals) up to 0.75 (very strong signals).
+            # BERT always retains at least (1 - alpha) weight.
+            #
+            # Examples:
+            #   fraud_score=0.10 → alpha=0.50 → final = 0.5*rule + 0.5*bert
+            #   fraud_score=0.50 → alpha=0.63 → final = 0.63*rule + 0.37*bert
+            #   fraud_score=0.95 → alpha=0.75 → final = 0.75*rule + 0.25*bert
+            alpha = min(0.50 + fraud_score * 0.26, 0.75)
+            final_fraud_prob = alpha * fraud_score + (1 - alpha) * bert_fraud_prob
+            final_fraud_prob = min(final_fraud_prob, 0.97)  # never reach 100%
             final_legit_prob = 1 - final_fraud_prob
         else:
-            # NO RULES TRIGGERED: Rely on BERT for sophisticated scams
-            # BERT catches subtle patterns like:
-            # - Unusual language combinations
-            # - Vague job descriptions that sound professional
-            # - Hidden scam patterns learned from training data
+            # NO RULES TRIGGERED: pure BERT — no change to this path.
             final_fraud_prob = bert_fraud_prob
             final_legit_prob = bert_legit_prob
-        
-        # Get the predicted class based on adjusted probabilities
-        if final_fraud_prob > final_legit_prob:
+
+        # Classify as fraud if fraud prob > 0.3 (kept intentionally aggressive
+        # to preserve recall on borderline cases)
+        if final_fraud_prob > 0.3:
             predicted_class = 1  # Fraudulent
             confidence = final_fraud_prob
         else:

@@ -1,5 +1,440 @@
 [
   {
+    "id": "20260505114604580956",
+    "timestamp": "2026-05-05 11:46:04",
+    "text_preview": "**Title:** $$$ EARN $5000/WEEK FROM HOME - DATA ENTRY $$$\n\n**Company:** Global Income Solutions\n\n**Description:**\nURGENT...",
+    "full_text": "**Title:** $$$ EARN $5000/WEEK FROM HOME - DATA ENTRY $$$\n\n**Company:** Global Income Solutions\n\n**Description:**\nURGENT HIRING!!! We are looking for motivated individuals to work from home! NO EXPERIENCE NEEDED! Start earning $5000 per week with just 2-3 hours of work per day! This is a GUARANTEED income opportunity!\n\nRequirements:\n- Must have a computer\n- Must be 18+\n- No background check needed\n\nTo apply, send $50 processing fee to our PayPal account and your bank details for direct deposit setup. Limited positions available - ACT NOW!!!\n\nContact: makemoney247@gmail.com",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 87.41,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Uses personal email domain",
+      "No experience/interview required",
+      "Uses urgency tactics",
+      "Promises guaranteed income",
+      "Unrealistic weekly pay",
+      "Excessive caps/exclamation marks"
+    ],
+    "probabilities": {
+      "fraudulent": 87.41,
+      "legitimate": 12.59
+    },
+    "bert_raw": {
+      "fraudulent": 64.99,
+      "legitimate": 35.01
+    },
+    "bert_estimate": 65.0
+  },
+  {
+    "id": "20260505114031524467",
+    "timestamp": "2026-05-05 11:40:31",
+    "text_preview": "job description",
+    "full_text": "job description",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 99.91,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 99.91,
+      "legitimate": 0.09
+    },
+    "bert_raw": {
+      "fraudulent": 99.91,
+      "legitimate": 0.09
+    },
+    "bert_estimate": 99.9
+  },
+  {
+    "id": "20260505113217742458",
+    "timestamp": "2026-05-05 11:32:17",
+    "text_preview": "**Title:** $$$ EARN $5000/WEEK FROM HOME - DATA ENTRY $$$\n\n**Company:** Global Income Solutions\n\n**Description:**\nURGENT...",
+    "full_text": "**Title:** $$$ EARN $5000/WEEK FROM HOME - DATA ENTRY $$$\n\n**Company:** Global Income Solutions\n\n**Description:**\nURGENT HIRING!!! We are looking for motivated individuals to work from home! NO EXPERIENCE NEEDED! Start earning $5000 per week with just 2-3 hours of work per day! This is a GUARANTEED income opportunity!\n\nRequirements:\n- Must have a computer\n- Must be 18+\n- No background check needed\n\nTo apply, send $50 processing fee to our PayPal account and your bank details for direct deposit setup. Limited positions available - ACT NOW!!!\n\nContact: makemoney247@gmail.com",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 87.41,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Uses personal email domain",
+      "No experience/interview required",
+      "Uses urgency tactics",
+      "Promises guaranteed income",
+      "Unrealistic weekly pay",
+      "Excessive caps/exclamation marks"
+    ],
+    "probabilities": {
+      "fraudulent": 87.41,
+      "legitimate": 12.59
+    },
+    "bert_raw": {
+      "fraudulent": 64.99,
+      "legitimate": 35.01
+    },
+    "bert_estimate": 65.0
+  },
+  {
+    "id": "20260505112622637417",
+    "timestamp": "2026-05-05 11:26:22",
+    "text_preview": "**Title:** $$$ EARN $5000/WEEK FROM HOME - DATA ENTRY $$$\n\n**Company:** Global Income Solutions\n\n**Description:**\nURGENT...",
+    "full_text": "**Title:** $$$ EARN $5000/WEEK FROM HOME - DATA ENTRY $$$\n\n**Company:** Global Income Solutions\n\n**Description:**\nURGENT HIRING!!! We are looking for motivated individuals to work from home! NO EXPERIENCE NEEDED! Start earning $5000 per week with just 2-3 hours of work per day! This is a GUARANTEED income opportunity!\n\nRequirements:\n- Must have a computer\n- Must be 18+\n- No background check needed\n\nTo apply, send $50 processing fee to our PayPal account and your bank details for direct deposit setup. Limited positions available - ACT NOW!!!\n\nContact: makemoney247@gmail.com",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 87.41,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Uses personal email domain",
+      "No experience/interview required",
+      "Uses urgency tactics",
+      "Promises guaranteed income",
+      "Unrealistic weekly pay",
+      "Excessive caps/exclamation marks"
+    ],
+    "probabilities": {
+      "fraudulent": 87.41,
+      "legitimate": 12.59
+    },
+    "bert_raw": {
+      "fraudulent": 64.99,
+      "legitimate": 35.01
+    },
+    "bert_estimate": 65.0
+  },
+  {
+    "id": "20260504130147310209",
+    "timestamp": "2026-05-04 13:01:47",
+    "text_preview": "**Title:** $$$ EARN $5000/WEEK FROM HOME - DATA ENTRY $$$\n\n**Company:** Global Income Solutions\n\n**Description:**\nURGENT...",
+    "full_text": "**Title:** $$$ EARN $5000/WEEK FROM HOME - DATA ENTRY $$$\n\n**Company:** Global Income Solutions\n\n**Description:**\nURGENT HIRING!!! We are looking for motivated individuals to work from home! NO EXPERIENCE NEEDED! Start earning $5000 per week with just 2-3 hours of work per day! This is a GUARANTEED income opportunity!\n\nRequirements:\n- Must have a computer\n- Must be 18+\n- No background check needed\n\nTo apply, send $50 processing fee to our PayPal account and your bank details for direct deposit setup. Limited positions available - ACT NOW!!!\n\nContact: makemoney247@gmail.com\n\n---",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 88.88,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Uses personal email domain",
+      "No experience/interview required",
+      "Uses urgency tactics",
+      "Promises guaranteed income",
+      "Unrealistic weekly pay",
+      "Excessive caps/exclamation marks"
+    ],
+    "probabilities": {
+      "fraudulent": 88.88,
+      "legitimate": 11.12
+    },
+    "bert_raw": {
+      "fraudulent": 70.83,
+      "legitimate": 29.17
+    },
+    "bert_estimate": 70.8
+  },
+  {
+    "id": "20260504115747411193",
+    "timestamp": "2026-05-04 11:57:47",
+    "text_preview": "**Title:** $$$ EARN $5000/WEEK FROM HOME - DATA ENTRY $$$\n\n**Company:** Global Income Solutions\n\n**Description:**\nURGENT...",
+    "full_text": "**Title:** $$$ EARN $5000/WEEK FROM HOME - DATA ENTRY $$$\n\n**Company:** Global Income Solutions\n\n**Description:**\nURGENT HIRING!!! We are looking for motivated individuals to work from home! NO EXPERIENCE NEEDED! Start earning $5000 per week with just 2-3 hours of work per day! This is a GUARANTEED income opportunity!\n\nRequirements:\n- Must have a computer\n- Must be 18+\n- No background check needed\n\nTo apply, send $50 processing fee to our PayPal account and your bank details for direct deposit setup. Limited positions available - ACT NOW!!!\n\nContact: makemoney247@gmail.com",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 87.41,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Uses personal email domain",
+      "No experience/interview required",
+      "Uses urgency tactics",
+      "Promises guaranteed income",
+      "Unrealistic weekly pay",
+      "Excessive caps/exclamation marks"
+    ],
+    "probabilities": {
+      "fraudulent": 87.41,
+      "legitimate": 12.59
+    },
+    "bert_raw": {
+      "fraudulent": 64.99,
+      "legitimate": 35.01
+    },
+    "bert_estimate": 65.0
+  },
+  {
+    "id": "20260501215835160798",
+    "timestamp": "2026-05-01 21:58:35",
+    "text_preview": "**Title:** PERSONAL ASSISTANT TO CEO - $6000/MONTH - PART TIME\n\n**Company:** Thompson & Associates LLC\n\n**Description:*...",
+    "full_text": "\n**Title:** PERSONAL ASSISTANT TO CEO - $6000/MONTH - PART TIME\n\n**Company:** Thompson & Associates LLC\n\n**Description:**\nWealthy executive seeking personal assistant for light duties. PERFECT for students or stay-at-home parents!\n\nResponsibilities:\n- Run errands (we provide funds via check)\n- Purchase gift cards for clients\n- Handle personal shopping\n\nYou will receive a $5000 check immediately - cash it and keep $1000 as your first week's pay. Use the remaining $4000 to purchase gift cards and send us the codes.\n\nNO INTERVIEW NEEDED! Just email your:\n- Full name\n- Address\n- Phone number\n- Date of birth\n\nReply to: ceo.thompson.assistant@gmail.com\n",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 71.1,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Uses personal email domain",
+      "Mentions gift cards",
+      "Involves receiving checks",
+      "No experience/interview required"
+    ],
+    "probabilities": {
+      "fraudulent": 71.1,
+      "legitimate": 28.9
+    },
+    "bert_raw": {
+      "fraudulent": 0.55,
+      "legitimate": 99.45
+    },
+    "bert_estimate": 0.6
+  },
+  {
+    "id": "20260501215703128179",
+    "timestamp": "2026-05-01 21:57:03",
+    "text_preview": "Title: Remote Data Processing Assistant\nCompany Profile: Fast-growing global service firm.\nDescription: Handle customer...",
+    "full_text": "Title: Remote Data Processing Assistant\nCompany Profile: Fast-growing global service firm.\nDescription: Handle customer records and simple process tasks from home. Training is provided and onboarding is immediate. A one-time onboarding kit cost of 1499 INR will be reimbursed after your first month.\nRequirements: Basic computer skills and reliable internet.\nBenefits: Weekly incentives and flexible shifts.",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 52.56,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Delayed reimbursement promise (scam tactic)"
+    ],
+    "probabilities": {
+      "fraudulent": 52.56,
+      "legitimate": 47.44
+    },
+    "bert_raw": {
+      "fraudulent": 1.42,
+      "legitimate": 98.58
+    },
+    "bert_estimate": 1.4
+  },
+  {
+    "id": "20260501215603050997",
+    "timestamp": "2026-05-01 21:56:03",
+    "text_preview": "Title: Vendor Coordination Executive\nCompany Profile: Multi-market service organization in growth mode.\nDescription: Coo...",
+    "full_text": "Title: Vendor Coordination Executive\nCompany Profile: Multi-market service organization in growth mode.\nDescription: Coordinate vendor follow-ups, update trackers, and align daily deliverables with internal targets. Candidates should be comfortable in dynamic settings where operating procedures may be revised periodically.\nRequirements: Communication skills, consistency, and process discipline.\nBenefits: Incentive-linked compensation and role expansion opportunities.",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 97.22,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 2.78,
+      "legitimate": 97.22
+    },
+    "bert_raw": {
+      "fraudulent": 2.78,
+      "legitimate": 97.22
+    },
+    "bert_estimate": 2.8
+  },
+  {
+    "id": "20260501213531742526",
+    "timestamp": "2026-05-01 21:35:31",
+    "text_preview": "title: Vendor Coordination Executive\nCompany Profile: Multi-market service organization in growth mode.\nDescription: Coo...",
+    "full_text": "title: Vendor Coordination Executive\nCompany Profile: Multi-market service organization in growth mode.\nDescription: Coordinate vendor follow-ups, update trackers, and align daily deliverables with internal targets. Candidates should be comfortable in dynamic settings where operating procedures may be revised periodically.\nRequirements: Communication skills, consistency, and process discipline.\nBenefits: Incentive-linked compensation and role expansion opportunities.",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 97.22,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 2.78,
+      "legitimate": 97.22
+    },
+    "bert_raw": {
+      "fraudulent": 2.78,
+      "legitimate": 97.22
+    },
+    "bert_estimate": 2.8
+  },
+  {
+    "id": "20260501213435666078",
+    "timestamp": "2026-05-01 21:34:35",
+    "text_preview": "Title: Digital Marketing Trainee\nCompany Profile: Growth-stage outreach team.\nDescription: Entry role focused on campaig...",
+    "full_text": "Title: Digital Marketing Trainee\nCompany Profile: Growth-stage outreach team.\nDescription: Entry role focused on campaign tasks and lead sorting. To activate your account, a refundable security deposit is required and returned after successful completion of initial milestones.\nRequirements: No prior background needed, basic communication skills.\nBenefits: Incentive bonuses and quick onboarding.",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 70.5,
+    "fraud_signals": [
+      "Requires deposit (potential scam)"
+    ],
+    "probabilities": {
+      "fraudulent": 70.5,
+      "legitimate": 29.5
+    },
+    "bert_raw": {
+      "fraudulent": 0.04,
+      "legitimate": 99.96
+    },
+    "bert_estimate": 0.0
+  },
+  {
+    "id": "20260501212358290585",
+    "timestamp": "2026-05-01 21:23:58",
+    "text_preview": "Title: Remote Data Processing Assistant\nCompany Profile: Fast-growing global service firm.\nDescription: Handle customer...",
+    "full_text": "Title: Remote Data Processing Assistant\nCompany Profile: Fast-growing global service firm.\nDescription: Handle customer records and simple process tasks from home. Training is provided and onboarding is immediate. A one-time onboarding kit cost of 1499 INR will be reimbursed after your first month.\nRequirements: Basic computer skills and reliable internet.\nBenefits: Weekly incentives and flexible shifts.",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 91.0,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Delayed reimbursement promise (scam tactic)"
+    ],
+    "probabilities": {
+      "fraudulent": 91.0,
+      "legitimate": 9.0
+    },
+    "bert_raw": {
+      "fraudulent": 1.42,
+      "legitimate": 98.58
+    },
+    "bert_estimate": 1.4
+  },
+  {
+    "id": "20260501212316256378",
+    "timestamp": "2026-05-01 21:23:16",
+    "text_preview": "Title: Client Success Associate\nCompany Profile: A scaling consulting network focused on partner enablement and executio...",
+    "full_text": "Title: Client Success Associate\nCompany Profile: A scaling consulting network focused on partner enablement and execution support.\nDescription: Manage partner communication logs, track completion status, and maintain quality notes for assigned accounts. The role requires high ownership and comfort with evolving procedures.\nRequirements: Detail orientation, independent work style, and consistency in reporting.\nBenefits: Structured mentoring, variable incentives linked to outcomes, remote-first collaboration",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 98.53,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 1.47,
+      "legitimate": 98.53
+    },
+    "bert_raw": {
+      "fraudulent": 1.47,
+      "legitimate": 98.53
+    },
+    "bert_estimate": 1.5
+  },
+  {
+    "id": "20260501212207967601",
+    "timestamp": "2026-05-01 21:22:07",
+    "text_preview": "title: Remote Operations Coordinator\nCompany Profile: We are a newly established digital expansion unit supporting inter...",
+    "full_text": "title: Remote Operations Coordinator\nCompany Profile: We are a newly established digital expansion unit supporting international partner workflows.\nDescription: Coordinate daily task sheets, internal updates, and exception reports across multiple partner channels. You will follow process notes, prepare summaries, and support execution teams on rotating assignments.\nRequirements: Strong communication, discretion with sensitive process information, and ability to adapt to changing workflows.\nBenefits: Performance-based progression, flexible shift windows, growth in cross-functional operations.",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 99.99,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 0.01,
+      "legitimate": 99.99
+    },
+    "bert_raw": {
+      "fraudulent": 0.01,
+      "legitimate": 99.99
+    },
+    "bert_estimate": 0.0
+  },
+  {
+    "id": "20260501211642823655",
+    "timestamp": "2026-05-01 21:16:42",
+    "text_preview": "**Title:** PERSONAL ASSISTANT TO CEO - $6000/MONTH - PART TIME\n\n**Company:** Thompson & Associates LLC\n\n**Description:**...",
+    "full_text": "**Title:** PERSONAL ASSISTANT TO CEO - $6000/MONTH - PART TIME\n\n**Company:** Thompson & Associates LLC\n\n**Description:**\nWealthy executive seeking personal assistant for light duties. PERFECT for students or stay-at-home parents!\n\nResponsibilities:\n- Run errands (we provide funds via check)\n- Purchase gift cards for clients\n- Handle personal shopping\n\nYou will receive a $5000 check immediately - cash it and keep $1000 as your first week's pay. Use the remaining $4000 to purchase gift cards and send us the codes.\n\nNO INTERVIEW NEEDED! Just email your:\n- Full name\n- Address\n- Phone number\n- Date of birth\n\nReply to: ceo.thompson.assistant@gmail.com\n",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 96.6,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Uses personal email domain",
+      "Mentions gift cards",
+      "Involves receiving checks",
+      "No experience/interview required"
+    ],
+    "probabilities": {
+      "fraudulent": 96.6,
+      "legitimate": 3.4
+    },
+    "bert_raw": {
+      "fraudulent": 0.55,
+      "legitimate": 99.45
+    },
+    "bert_estimate": 0.6
+  },
+  {
+    "id": "20260501211447401900",
+    "timestamp": "2026-05-01 21:14:47",
+    "text_preview": "*Title:** APPLE/MICROSOFT TECH SUPPORT - $35/HOUR - NO EXPERIENCE\n\n**Company:** Premier Tech Solutions (Apple/Microsoft...",
+    "full_text": "*Title:** APPLE/MICROSOFT TECH SUPPORT - $35/HOUR - NO EXPERIENCE\n\n**Company:** Premier Tech Solutions (Apple/Microsoft Partner)\n\n**Description:**\nJOIN OUR TEAM TODAY!!! We are hiring tech support agents to work from home!\n\nBenefits:\n- $35/hour starting pay\n- No experience or degree required\n- Work whenever you want\n- GUARANTEED 40 hours per week\n\nTo start, you must purchase our training software ($299) and home office equipment kit ($499) from our approved vendor.\n\nYour equipment cost will be reimbursed in your FIRST PAYCHECK!!!\n\nApply now: tecsupport_hiring@outlook.com\nCall: 1-800-FAKE-JOB\n",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 91.0,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Uses personal email domain",
+      "Excessive caps/exclamation marks"
+    ],
+    "probabilities": {
+      "fraudulent": 91.0,
+      "legitimate": 9.0
+    },
+    "bert_raw": {
+      "fraudulent": 0.07,
+      "legitimate": 99.93
+    },
+    "bert_estimate": 0.1
+  },
+  {
+    "id": "20260426185224158714",
+    "timestamp": "2026-04-26 18:52:24",
+    "text_preview": "*Title:** PERSONAL ASSISTANT TO CEO - $6000/MONTH - PART TIME\n\n**Company:** Thompson & Associates LLC\n\n**Description:**...",
+    "full_text": "*Title:** PERSONAL ASSISTANT TO CEO - $6000/MONTH - PART TIME\n\n**Company:** Thompson & Associates LLC\n\n**Description:**\nWealthy executive seeking personal assistant for light duties. PERFECT for students or stay-at-home parents!\n\nResponsibilities:\n- Run errands (we provide funds via check)\n- Purchase gift cards for clients\n- Handle personal shopping\n\nYou will receive a $5000 check immediately - cash it and keep $1000 as your first week's pay. Use the remaining $4000 to purchase gift cards and send us the codes.\n\nNO INTERVIEW NEEDED! Just email your:\n- Full name\n- Address\n- Phone number\n- Date of birth\n\nReply to: ceo.thompson.assistant@gmail.com\n",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 96.6,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Uses personal email domain",
+      "Mentions gift cards",
+      "Involves receiving checks",
+      "No experience/interview required"
+    ],
+    "probabilities": {
+      "fraudulent": 96.6,
+      "legitimate": 3.4
+    }
+  },
+  {
+    "id": "20260426185100668064",
+    "timestamp": "2026-04-26 18:51:00",
+    "text_preview": "Job Title: Software Engineer (Backend)\n\nCompany: Infosys\nLocation: Bangalore, India\nSalary: \u20b96\u201310 LPA\n\n\ud83d\udcc4 Job Description...",
+    "full_text": "Job Title: Software Engineer (Backend)\n\nCompany: Infosys\nLocation: Bangalore, India\nSalary: \u20b96\u201310 LPA\n\n\ud83d\udcc4 Job Description:\n\nWe are looking for a Backend Developer to design and develop scalable web applications. You will work with cross-functional teams to deliver high-quality software solutions.\n\n\ud83c\udfaf Requirements:\nB.Tech / B.E in Computer Science or related field\nExperience in Python / Java\nKnowledge of REST APIs and databases\n\ud83d\udcbc Benefits:\nHealth insurance\nPaid leave\nCareer growth opportunities\n\ud83d\udce9 Apply:\n\nApply through official careers page: https://www.infosys.com/careers",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 99.92,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 0.08,
+      "legitimate": 99.92
+    }
+  },
+  {
+    "id": "20260426184941575429",
+    "timestamp": "2026-04-26 18:49:41",
+    "text_preview": "Job Title: Customer Support Executive\n\nCompany: Amazon\nLocation: Remote / Bangalore\nSalary: \u20b93\u20135 LPA\n\ud83d\udcc4 Job Description:...",
+    "full_text": "Job Title: Customer Support Executive\n\nCompany: Amazon\nLocation: Remote / Bangalore\nSalary: \u20b93\u20135 LPA\n\ud83d\udcc4 Job Description:\nHandle customer queries via chat/email. Provide timely and accurate resolutions.\n\ud83c\udfaf Requirements:\nGood communication skills\nBasic computer knowledge\n\ud83d\udcbc Benefits:\nFixed salary\nPerformance bonus\nTraining provided",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 99.8,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 0.2,
+      "legitimate": 99.8
+    }
+  },
+  {
     "id": "20260410140311449571",
     "timestamp": "2026-04-10 14:03:11",
     "text_preview": "Job Title: Software Engineer (Backend)\n\nCompany: Infosys\nLocation: Bangalore, India\nSalary: \u20b96\u201310 LPA\n\n\ud83d\udcc4 Job Description...",

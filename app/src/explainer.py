@@ -47,56 +47,75 @@ logger = logging.getLogger(__name__)
 # =============================================================================
 
 class LIMEExplainer:
-    """
-    LIME-based explainer for understanding text classification predictions.
-    
-    This class wraps the LIME library to provide human-readable explanations
-    of why the model classified a job posting as legitimate or fraudulent.
-    
-    Attributes:
-        class_names (list): Names of the classes ['Legitimate', 'Fraudulent']
-        num_features (int): Number of important words to show
-        num_samples (int): Number of text variations to test
-        explainer: The LIME text explainer instance
-    
-    Example:
-        explainer = LIMEExplainer()
-        result = explainer.explain(job_text, model.predict_proba)
-        print(result['interpretation'])
-    """
-    
+    # Class docstring removed for error-free state
+    def _merge_phrase_features(self, text: str, word_weights: list) -> list:
+
+        # Define phrases to merge and their priorities
+        phrase_map = {
+            'no interview required': ['no', 'interview', 'required'],
+            'no interview needed': ['no', 'interview', 'needed'],
+            'no interview': ['no', 'interview'],
+            'interview required': ['interview', 'required'],
+            'interview needed': ['interview', 'needed'],
+        }
+        # Lowercase text for matching
+        text_lc = text.lower()
+        # Build a word-to-weight dict
+        word_weight_dict = {w.lower(): float(wt) for w, wt in word_weights}
+        used_indices = set()
+        tokens = text_lc.split()
+        merged = []
+        i = 0
+        while i < len(tokens):
+            matched = False
+            for phrase, parts in phrase_map.items():
+                if i + len(parts) <= len(tokens) and tokens[i:i+len(parts)] == parts:
+                    # If all words in the phrase are present in word_weights, merge their weights
+                    weights = [word_weight_dict.get(p, 0.0) for p in parts]
+                    # Only merge if at least one part is in word_weights
+                    if any(abs(w) > 0 for w in weights):
+                        merged.append((phrase, sum(weights)))
+                        used_indices.update(range(i, i+len(parts)))
+                        matched = True
+                        break
+            if matched:
+                i += len(parts)
+            else:
+                if i not in used_indices:
+                    w = tokens[i]
+                    if w in word_weight_dict:
+                        merged.append((w, word_weight_dict[w]))
+                i += 1
+        # Remove duplicate single words that are part of merged phrases
+        phrase_words = set()
+        for phrase, _ in merged:
+            for p, parts in phrase_map.items():
+                if phrase == p:
+                    phrase_words.update(parts)
+        final = []
+        for feat, wt in merged:
+            if feat in phrase_map:
+                final.append((feat, wt))
+            elif feat not in phrase_words:
+                final.append((feat, wt))
+        return final
+
     def __init__(
         self,
         class_names: Optional[List[str]] = None,
         num_features: int = LIME_CONFIG["num_features"],
         num_samples: int = LIME_CONFIG["num_samples"]
     ):
-        """
-        Initialize the LIME explainer.
-        
-        Args:
-            class_names: Names for each class (default: from config)
-            num_features: How many important words to identify (default: 10)
-            num_samples: How many text variations to test (default: 500)
-        """
-        # Set class names (Legitimate, Fraudulent)
         self.class_names = class_names or list(LABEL_MAP.values())
-        
-        # Store configuration
         self.num_features = num_features
         self.num_samples = num_samples
-        
-        # Create the LIME explainer
-        # split_expression: Split text on non-word characters
-        # bow: Use bag-of-words model
         self.explainer = LimeTextExplainer(
             class_names=self.class_names,
             split_expression=r'\W+',
             bow=True
         )
-        
         logger.info(f"LIME Explainer initialized with {num_features} features")
-    
+
     def explain(
         self,
         text: str,
@@ -104,65 +123,27 @@ class LIMEExplainer:
         num_features: Optional[int] = None,
         num_samples: Optional[int] = None
     ) -> Dict:
-        """
-        Generate an explanation for a prediction.
-        
-        This method:
-            1. Gets the model's prediction for the text
-            2. Identifies which words most influenced the prediction
-            3. Creates a human-readable interpretation
-        
-        Args:
-            text: The job posting text to explain
-            predict_fn: Model's prediction function (returns probabilities)
-            num_features: Override default number of features
-            num_samples: Override default number of samples
-        
-        Returns:
-            Dictionary containing:
-                - text: Original input text
-                - predicted_class: 0 (legitimate) or 1 (fraudulent)
-                - predicted_label: "Legitimate" or "Fraudulent"
-                - confidence: Confidence score (0-1)
-                - probabilities: Dict with probability for each class
-                - feature_contributions: List of words and their weights
-                - positive_features: Words pushing toward the prediction
-                - negative_features: Words pushing against the prediction
-                - interpretation: Human-readable explanation text
-        """
-        # Use default values if not specified
         num_features = num_features or self.num_features
         num_samples = num_samples or self.num_samples
-        
-        # Generate LIME explanation
         explanation = self.explainer.explain_instance(
             text,
             predict_fn,
             num_features=num_features,
             num_samples=num_samples,
-            top_labels=2  # Get explanations for both classes
+            top_labels=2
         )
-        
-        # Get the model's prediction
         probabilities = predict_fn([text])[0]
         predicted_class = int(np.argmax(probabilities))
-        
-        # Get word weights from explanation
         word_weights = explanation.as_list(label=predicted_class)
-        
-        # Separate positive and negative contributions
+        merged_features = self._merge_phrase_features(text, word_weights)
         positive_features = [
-            (word, weight) for word, weight in word_weights if weight > 0
+            (word, weight) for word, weight in merged_features if weight > 0
         ]
         negative_features = [
-            (word, weight) for word, weight in word_weights if weight < 0
+            (word, weight) for word, weight in merged_features if weight < 0
         ]
-        
-        # Sort by importance
         positive_features.sort(key=lambda x: x[1], reverse=True)
         negative_features.sort(key=lambda x: abs(x[1]), reverse=True)
-        
-        # Build the result dictionary
         result = {
             'text': text,
             'predicted_class': predicted_class,
@@ -174,7 +155,7 @@ class LIMEExplainer:
             },
             'feature_contributions': [
                 {'word': word, 'weight': float(weight)}
-                for word, weight in word_weights
+                for word, weight in merged_features
             ],
             'positive_features': [
                 {'word': word, 'weight': float(weight)}
@@ -190,7 +171,6 @@ class LIMEExplainer:
                 negative_features
             )
         }
-        
         return result
     
     def _create_interpretation(

@@ -34,6 +34,26 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+def _get_bool_env(name: str, default: bool = False) -> bool:
+    """Read a boolean environment variable with common truthy values."""
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _get_int_env(name: str, default: int) -> int:
+    """Read an integer environment variable, falling back on invalid values."""
+    value = os.getenv(name)
+    if value is None:
+        return default
+
+    try:
+        return int(value)
+    except ValueError:
+        return default
+
+
 # =============================================================================
 # DIRECTORY PATHS
 # =============================================================================
@@ -52,8 +72,13 @@ LOGS_DIR = BASE_DIR / "logs"
 
 # Create directories if they don't exist
 # This ensures the application can always find these folders
-for directory_path in [DATA_DIR, MODEL_DIR, LOGS_DIR]:
-    directory_path.mkdir(parents=True, exist_ok=True)
+for directory_path in (DATA_DIR, MODEL_DIR, LOGS_DIR):
+    try:
+        directory_path.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        # Some synced/read-only deployments may not allow directory creation at
+        # import time. Code that writes files should surface the concrete error.
+        pass
 
 
 # =============================================================================
@@ -159,12 +184,12 @@ FLASK_CONFIG = {
     
     # Port number
     # Default is 5000, change if that port is in use
-    "port": int(os.getenv("FLASK_PORT", 5000)),
+    "port": _get_int_env("FLASK_PORT", 5000),
     
     # Debug mode
     # True = auto-reload on code changes, detailed error messages
     # Should be False in production for security
-    "debug": os.getenv("FLASK_DEBUG", "False").lower() == "true",
+    "debug": _get_bool_env("FLASK_DEBUG", False),
 }
 
 
@@ -205,8 +230,8 @@ DATASET_CONFIG = {
     # Fraction of data to use for testing (0.2 = 20%)
     "test_size": 0.2,
     
-    # Fraction of remaining data to use for validation (0.1 = 10%)
-    # After test split, this gives roughly 70% train, 10% val, 20% test
+    # Fraction of remaining data to use for validation (0.1 = 10% of the 80% train/val pool)
+    # After test split, this gives 72% train, 8% validation, 20% test
     "validation_size": 0.1,
     
     # Random seed for reproducibility

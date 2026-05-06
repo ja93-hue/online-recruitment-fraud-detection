@@ -37,6 +37,7 @@ import sys
 import logging
 import argparse
 from pathlib import Path
+import copy
 
 # Add parent directory for local imports
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -316,14 +317,20 @@ def calculate_class_weights(labels: np.ndarray, device: torch.device) -> torch.T
 # MAIN TRAINING FUNCTION
 # =============================================================================
 
+from sklearn.model_selection import StratifiedKFold
+
 def train_model(
     epochs: int = 4,
     batch_size: int = 8,
-    learning_rate: float = 2e-5,
+    learning_rate: float = 1e-5,  # Lower learning rate for more careful training
     sample_size: int = None,
     use_gpu: bool = True,
     use_smote: bool = True,
-    use_weights: bool = True
+    use_weights: bool = True,
+    fraud_weight_boost: float = 1.2,  # Boost fraud class weight for higher recall
+    threshold: float = 0.3,  # For logging/consistency
+    n_splits: int = 5,  # For k-fold cross-validation
+    early_stopping_patience: int = 2  # For early stopping
 ) -> tuple:
     """
     Train the BERT model for fake job detection.
@@ -366,101 +373,117 @@ def train_model(
     dataset_path = download_dataset()
     dataframe = prepare_data(dataset_path, sample_size)
     
-    # === DATA SPLITTING ===
-    # Split into train (80%) and temp (20%)
-    train_df, temp_df = train_test_split(
-        dataframe,
-        test_size=0.2,
-        stratify=dataframe['fraudulent'],
-        random_state=42
-    )
-    
-    # Split temp into validation (50%) and test (50%)
-    # This gives us: 80% train, 10% validation, 10% test
-    val_df, test_df = train_test_split(
-        temp_df,
-        test_size=0.5,
-        stratify=temp_df['fraudulent'],
-        random_state=42
-    )
-    
-    logger.info(
-        f"Data split - Train: {len(train_df)}, "
-        f"Validation: {len(val_df)}, Test: {len(test_df)}"
-    )
-    
-    # === TOKENIZATION ===
+    # === CROSS-VALIDATION SETUP ===
+    X = dataframe['text'].values
+    y = dataframe['fraudulent'].values
+    skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42)
     tokenizer = BertTokenizer.from_pretrained(MODEL_CONFIG["model_name"])
-    
-    train_encodings, train_labels = tokenize(
-        train_df['text'], train_df['fraudulent'], tokenizer
-    )
-    val_encodings, val_labels = tokenize(
-        val_df['text'], val_df['fraudulent'], tokenizer
-    )
-    test_encodings, test_labels = tokenize(
-        test_df['text'], test_df['fraudulent'], tokenizer
-    )
-    
-    # === APPLY SMOTE (if enabled) ===
-    if use_smote:
-        train_encodings, train_labels = apply_smote(train_encodings, train_labels)
-    
-    # === CALCULATE CLASS WEIGHTS (if enabled) ===
-    class_weights = None
-    if use_weights:
-        class_weights = calculate_class_weights(train_labels, device)
-    
-    # === MODEL INITIALIZATION ===
-    detector = JobFraudDetector(device=str(device))
-    detector.initialize_model()
-    
-    # === TRAINING ===
-    logger.info(
-        f"Starting training: epochs={epochs}, batch_size={batch_size}, "
-        f"smote={use_smote}, class_weights={use_weights}"
-    )
-    
-    detector.train(
-        train_encodings=train_encodings,
-        train_labels=train_labels,
-        val_encodings=val_encodings,
-        val_labels=val_labels,
-        epochs=epochs,
-        batch_size=batch_size,
-        learning_rate=learning_rate,
-        class_weights=class_weights
-    )
-    
-    # === EVALUATION ===
-    logger.info("Evaluating on test set...")
-    
-    # Create test DataLoader
-    test_dataset = JobPostingDataset(test_encodings, test_labels)
-    test_loader = DataLoader(test_dataset, batch_size=batch_size)
-    
-    # Evaluate
-    test_loss, test_accuracy, predictions, true_labels = detector.evaluate(test_loader)
-    
-    # Get detailed metrics
-    metrics = detector.get_detailed_metrics(true_labels, predictions)
-    
-    # Log results
-    logger.info("=" * 60)
-    logger.info("FINAL RESULTS:")
-    logger.info(f"  Accuracy:          {metrics['accuracy']:.2%}")
-    logger.info(f"  Balanced Accuracy: {metrics['balanced_accuracy']:.2%}")
-    logger.info(f"  Precision:         {metrics['precision']:.2%}")
-    logger.info(f"  Recall:            {metrics['recall']:.2%}")
-    logger.info(f"  F1 Score:          {metrics['f1_score']:.2%}")
-    logger.info("=" * 60)
-    
-    # === SAVE MODEL ===
-    model_path = MODEL_DIR / "best_model.pt"
-    detector.save_model(model_path)
-    logger.info(f"Model saved to {model_path}")
-    
-    return detector, metrics
+
+    all_fold_metrics = []
+    best_fold_val_loss = float('inf')
+    best_fold_model = None
+    best_fold_metrics = None
+
+    for fold, (train_idx, val_idx) in enumerate(skf.split(X, y)):
+        logger.info(f"=== Fold {fold+1}/{n_splits} ===")
+        X_train, X_val = X[train_idx], X[val_idx]
+        y_train, y_val = y[train_idx], y[val_idx]
+
+        train_encodings, train_labels = tokenize(pd.Series(X_train), pd.Series(y_train), tokenizer)
+        val_encodings, val_labels = tokenize(pd.Series(X_val), pd.Series(y_val), tokenizer)
+
+        if use_smote:
+            train_encodings, train_labels = apply_smote(train_encodings, train_labels)
+
+        class_weights = None
+        if use_weights:
+            class_weights = calculate_class_weights(train_labels, device)
+            # Boost fraud class weight for higher recall
+            class_weights[1] = class_weights[1] * fraud_weight_boost
+
+        detector = JobFraudDetector(device=str(device))
+        detector.initialize_model()
+
+        # Early stopping logic
+        best_val_loss = float('inf')
+        patience_counter = 0
+        for epoch in range(epochs):
+            detector.train(
+                train_encodings=train_encodings,
+                train_labels=train_labels,
+                val_encodings=val_encodings,
+                val_labels=val_labels,
+                epochs=1,  # One epoch at a time
+                batch_size=batch_size,
+                learning_rate=learning_rate,
+                class_weights=class_weights
+            )
+            # Save checkpoint after each epoch
+            checkpoint_dir = MODEL_DIR / "checkpoints"
+            checkpoint_dir.mkdir(parents=True, exist_ok=True)
+            checkpoint_path = checkpoint_dir / f"fold{fold+1}_epoch{epoch+1}.pt"
+            torch.save(detector.model.state_dict(), checkpoint_path)
+            logger.info(f"Checkpoint saved: {checkpoint_path}")
+            
+            val_loss, val_accuracy, _, _ = detector.evaluate(DataLoader(JobPostingDataset(val_encodings, val_labels), batch_size=batch_size))
+            logger.info(f"Fold {fold+1} Epoch {epoch+1}: val_loss={val_loss:.4f}, val_accuracy={val_accuracy:.4f}")
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                patience_counter = 0
+                # Save best model for this fold
+                best_model_state = copy.deepcopy(detector.model.state_dict())
+            else:
+                patience_counter += 1
+                if patience_counter >= early_stopping_patience:
+                    logger.info(f"Early stopping at epoch {epoch+1} for fold {fold+1}")
+                    break
+
+        # Load best model state for this fold
+        detector.model.load_state_dict(best_model_state)
+        # Evaluate on validation set
+        val_loss, val_accuracy, val_preds, val_trues = detector.evaluate(DataLoader(JobPostingDataset(val_encodings, val_labels), batch_size=batch_size))
+        metrics = detector.get_detailed_metrics(val_trues, val_preds)
+        all_fold_metrics.append(metrics)
+        # Track best fold for saving
+        if val_loss < best_fold_val_loss:
+            best_fold_val_loss = val_loss
+            best_fold_model = detector
+            best_fold_metrics = metrics
+
+    # Save the best model from all folds
+    model_path = MODEL_DIR / f"best_model_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pt"
+    best_fold_model.save_model(model_path)
+    logger.info(f"Best cross-validated model saved to {model_path}")
+    logger.info(f"Best fold metrics: {best_fold_metrics}")
+    # Average metrics across folds
+    avg_metrics = {k: np.mean([m[k] for m in all_fold_metrics]) for k in all_fold_metrics[0]}
+    logger.info(f"Average cross-validation metrics: {avg_metrics}")
+
+    # === LOG FINAL METRICS TO LOG FILE ===
+    from datetime import datetime
+    import json
+    from config.settings import LOGS_DIR
+    log_file = LOGS_DIR / "training_log.json"
+
+    # CLEAR PREVIOUS LOGS: Overwrite with empty dict before new training
+    training_log = {}
+
+    training_log['final_metrics'] = {
+        'timestamp': datetime.now().isoformat(),
+        'best_fold_metrics': best_fold_metrics,
+        'average_metrics': avg_metrics,
+        'training_recommendations': {
+            'learning_rate': learning_rate,
+            'fraud_weight_boost': fraud_weight_boost,
+            'threshold': threshold,
+            'note': 'Lower learning rate and higher fraud class weight boost recall. Threshold is set in model.py.'
+        }
+    }
+    with open(log_file, 'w') as f:
+        json.dump(training_log, f, indent=2)
+    logger.info(f"Final metrics logged to {log_file}")
+
+    return best_fold_model, avg_metrics
 
 
 # =============================================================================
@@ -468,58 +491,26 @@ def train_model(
 # =============================================================================
 
 if __name__ == "__main__":
-    # Parse command line arguments
-    parser = argparse.ArgumentParser(
-        description="Train BERT model for fake job detection"
-    )
-    
-    parser.add_argument(
-        '--epochs',
-        type=int,
-        default=4,
-        help='Number of training epochs (default: 4)'
-    )
-    
-    parser.add_argument(
-        '--batch-size',
-        type=int,
-        default=8,
-        help='Batch size for training (default: 8)'
-    )
-    
-    parser.add_argument(
-        '--sample-size',
-        type=int,
-        default=None,
-        help='Limit dataset size (default: use all data)'
-    )
-    
-    parser.add_argument(
-        '--no-gpu',
-        action='store_true',
-        help='Disable GPU usage (use CPU only)'
-    )
-    
-    parser.add_argument(
-        '--no-smote',
-        action='store_true',
-        help='Disable SMOTE class balancing'
-    )
-    
-    parser.add_argument(
-        '--no-weights',
-        action='store_true',
-        help='Disable class weights'
-    )
-    
+    parser = argparse.ArgumentParser(description="Train BERT model for fake job detection with cross-validation and early stopping")
+    parser.add_argument('--epochs', type=int, default=4, help='Number of training epochs (default: 4)')
+    parser.add_argument('--batch-size', type=int, default=8, help='Batch size for training (default: 8)')
+    parser.add_argument('--sample-size', type=int, default=None, help='Limit dataset size (default: use all data)')
+    parser.add_argument('--no-gpu', action='store_true', help='Disable GPU usage (use CPU only)')
+    parser.add_argument('--no-smote', action='store_true', help='Disable SMOTE class balancing')
+    parser.add_argument('--no-weights', action='store_true', help='Disable class weights')
+    parser.add_argument('--n-splits', type=int, default=5, help='Number of folds for cross-validation (default: 5)')
+    parser.add_argument('--early-stopping-patience', type=int, default=2, help='Patience for early stopping (default: 2)')
     args = parser.parse_args()
-    
-    # Run training with parsed arguments
     train_model(
         epochs=args.epochs,
         batch_size=args.batch_size,
         sample_size=args.sample_size,
         use_gpu=not args.no_gpu,
         use_smote=not args.no_smote,
-        use_weights=not args.no_weights
+        use_weights=not args.no_weights,
+        n_splits=args.n_splits,
+        early_stopping_patience=args.early_stopping_patience,
+        fraud_weight_boost=1.2,  # Boost fraud class weight for recall
+        learning_rate=1e-5,      # Lower learning rate for careful training
+        threshold=0.3            # For logging/consistency
     )

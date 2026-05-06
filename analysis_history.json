@@ -1,0 +1,440 @@
+[
+  {
+    "id": "20260417132815382501",
+    "timestamp": "2026-04-17 13:28:15",
+    "text_preview": "Title: High School Mathematics Teacher\nCompany Profile: Springfield High School is a public school with a commitment to...",
+    "full_text": "Title: High School Mathematics Teacher\nCompany Profile: Springfield High School is a public school with a commitment to academic excellence.\nDescription: Teach mathematics to grades 9-12, prepare lesson plans, and assess student progress.\nRequirements: Bachelor\u2019s degree in Mathematics or Education, teaching certification.\nBenefits: Pension plan, summer breaks, professional development workshops.",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 99.97,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 0.03,
+      "legitimate": 99.97
+    }
+  },
+  {
+    "id": "20260417132743195442",
+    "timestamp": "2026-04-17 13:27:43",
+    "text_preview": "Title: Software Engineer\nCompany Profile: Google is a global leader in technology and innovation.\nDescription: Develop a...",
+    "full_text": "Title: Software Engineer\nCompany Profile: Google is a global leader in technology and innovation.\nDescription: Develop and maintain scalable backend systems. Collaborate with cross-functional teams to deliver high-quality software solutions.\nRequirements: Bachelor\u2019s degree in Computer Science or related field, 2+ years of experience in Python and Java, strong problem-solving skills.\nBenefits: Competitive salary, health insurance, 401(k), paid time off, on-site gym.",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 99.65,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 0.35,
+      "legitimate": 99.65
+    }
+  },
+  {
+    "id": "20260417132636929046",
+    "timestamp": "2026-04-17 13:26:36",
+    "text_preview": "Title: Personal Assistant for CEO\nCompany Profile: Leading tech firm.\nDescription: Manage emails, schedule meetings, and...",
+    "full_text": "Title: Personal Assistant for CEO\nCompany Profile: Leading tech firm.\nDescription: Manage emails, schedule meetings, and run errands for our CEO.\nRequirements: Good communication skills.\nBenefits: $1000/week, work from home.\nNote: You will be required to purchase gift cards for company use. All expenses will be reimbursed.",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 95.2,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Mentions gift cards"
+    ],
+    "probabilities": {
+      "fraudulent": 95.2,
+      "legitimate": 4.8
+    }
+  },
+  {
+    "id": "20260417132501380726",
+    "timestamp": "2026-04-17 13:25:01",
+    "text_preview": "Title: Data Entry Operator Needed ASAP!\nCompany Profile: Fast-growing international company.\nDescription: Work from home...",
+    "full_text": "Title: Data Entry Operator Needed ASAP!\nCompany Profile: Fast-growing international company.\nDescription: Work from home, flexible hours. All you need is a laptop and internet connection. No experience required!\nRequirements: Must be able to start immediately. Training provided.\nBenefits: High weekly pay, bonuses.\nNote: A small registration fee of $50 is required to process your application. This will be reimbursed after 2 months of work.",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 96.6,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Delayed reimbursement promise (scam tactic)",
+      "No experience/interview required",
+      "Delayed reimbursement promise (scam tactic)"
+    ],
+    "probabilities": {
+      "fraudulent": 96.6,
+      "legitimate": 3.4
+    }
+  },
+  {
+    "id": "20260417132037355309",
+    "timestamp": "2026-04-17 13:20:37",
+    "text_preview": "Company: ClickEarn Pvt Ltd (Fake)\n\ud83c\udfaf Job Description\n\nComplete simple online tasks and earn \u20b95,000 daily. Tasks include l...",
+    "full_text": "Company: ClickEarn Pvt Ltd (Fake)\n\ud83c\udfaf Job Description\n\nComplete simple online tasks and earn \u20b95,000 daily. Tasks include liking videos and reviewing products.\n\n\ud83d\udcb0 Earnings\n\n\u20b95,000/day",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 99.72,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 0.28,
+      "legitimate": 99.72
+    }
+  },
+  {
+    "id": "20260416195757067080",
+    "timestamp": "2026-04-16 19:57:57",
+    "text_preview": "Title: Urgent Work From Home Opportunity!\nCompany Profile: -\nDescription: Start earning $3000/week from home. No experie...",
+    "full_text": "Title: Urgent Work From Home Opportunity!\nCompany Profile: -\nDescription: Start earning $3000/week from home. No experience needed. Just send your bank details to get started. Limited spots!\nRequirements: None\nBenefits: Unlimited earning potential!",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 70.5,
+    "fraud_signals": [
+      "No experience/interview required",
+      "Unrealistic weekly pay"
+    ],
+    "probabilities": {
+      "fraudulent": 70.5,
+      "legitimate": 29.5
+    }
+  },
+  {
+    "id": "20260416195555369200",
+    "timestamp": "2026-04-16 19:55:55",
+    "text_preview": "Title: EARN $5000/WEEK!!! No Experience Needed!\nCompany Profile: \nDescription: Make money fast from home! No skills requ...",
+    "full_text": "Title: EARN $5000/WEEK!!! No Experience Needed!\nCompany Profile: \nDescription: Make money fast from home! No skills required. Send your bank details now!\nRequirements: None!\nBenefits: UNLIMITED EARNING!",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 73.5,
+    "fraud_signals": [
+      "No experience/interview required",
+      "Unrealistic weekly pay",
+      "Excessive caps/exclamation marks"
+    ],
+    "probabilities": {
+      "fraudulent": 73.5,
+      "legitimate": 26.5
+    }
+  },
+  {
+    "id": "20260413101955869874",
+    "timestamp": "2026-04-13 10:19:55",
+    "text_preview": "Dear Candidate,\n\n \n\nGreetings from Innovexis.\n\n \n\nWe are pleased to inform you that your profile has been shortlisted fo...",
+    "full_text": "Dear Candidate,\n\n \n\nGreetings from Innovexis.\n\n \n\nWe are pleased to inform you that your profile has been shortlisted for the Innovexis Internship Program based on the details you shared with us.\n\n \n\nThis shortlisting is the first step in the internship selection process. Further information regarding the next steps, orientation session, project allocation, and program structure will be shared with you shortly via email.\n\n \n\nWe request you to keep checking your registered email address regularly for updates and important instructions.\n\n \n\nIf you have any queries in the meantime, you may reply to this email or reach out to our support team during working hours.\n\n \n\nCongratulations on being shortlisted, and we look forward to your participation with Innovexis.\n\n \n\nWarm regards,\nShalini Kumari\nTeam Innovexis",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 99.61,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 0.39,
+      "legitimate": 99.61
+    }
+  },
+  {
+    "id": "20260413101006121215",
+    "timestamp": "2026-04-13 10:10:06",
+    "text_preview": "Title: EARN $5000/WEEK!!! No Experience Needed!\nCompany Profile: \nDescription: Make money fast from home! No skills requ...",
+    "full_text": "Title: EARN $5000/WEEK!!! No Experience Needed!\nCompany Profile: \nDescription: Make money fast from home! No skills required. Send your bank details now!\nRequirements: None!\nBenefits: UNLIMITED EARNING!",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 73.5,
+    "fraud_signals": [
+      "No experience/interview required",
+      "Unrealistic weekly pay",
+      "Excessive caps/exclamation marks"
+    ],
+    "probabilities": {
+      "fraudulent": 73.5,
+      "legitimate": 26.5
+    }
+  },
+  {
+    "id": "20260412234124928767",
+    "timestamp": "2026-04-12 23:41:24",
+    "text_preview": "Title: Senior Machine Learning Engineer\nCompany Profile: Fortune 500 financial services company.\nDescription: Develop an...",
+    "full_text": "Title: Senior Machine Learning Engineer\nCompany Profile: Fortune 500 financial services company.\nDescription: Develop and deploy ML models for fraud detection. Collaborate with data scientists and engineers.\nRequirements: Master\u2019s in CS, 5+ years ML experience, PyTorch, cloud platforms.\nBenefits: Stock options, health insurance, remote work.",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 99.92,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 0.08,
+      "legitimate": 99.92
+    }
+  },
+  {
+    "id": "20260412234022558668",
+    "timestamp": "2026-04-12 23:40:22",
+    "text_preview": "Title: Marketing Manager\nCompany Profile: Fast-growing startup.\nDescription: Looking for a marketing manager to handle c...",
+    "full_text": "Title: Marketing Manager\nCompany Profile: Fast-growing startup.\nDescription: Looking for a marketing manager to handle campaigns. Must be willing to travel internationally on short notice. All expenses paid.\nRequirements: Bachelor\u2019s degree, willingness to travel.\nBenefits: High salary, bonuses, travel perks.",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 99.35,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 0.65,
+      "legitimate": 99.35
+    }
+  },
+  {
+    "id": "20260412233918727439",
+    "timestamp": "2026-04-12 23:39:18",
+    "text_preview": "Title: Data Entry Clerk\nCompany Profile: International business solutions.\nDescription: Work from home, flexible hours....",
+    "full_text": "Title: Data Entry Clerk\nCompany Profile: International business solutions.\nDescription: Work from home, flexible hours. No interview required. Contact us on WhatsApp.\nRequirements: Basic computer skills.\nBenefits: Weekly payments.",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 70.5,
+    "fraud_signals": [
+      "No experience/interview required",
+      "Uses messaging apps (WhatsApp/Telegram) for hiring"
+    ],
+    "probabilities": {
+      "fraudulent": 70.5,
+      "legitimate": 29.5
+    }
+  },
+  {
+    "id": "20260412233635192258",
+    "timestamp": "2026-04-12 23:36:35",
+    "text_preview": "Title: Software Engineer\nCompany Profile: Leading tech company with 500+ employees.\nDescription: We are seeking a skille...",
+    "full_text": "Title: Software Engineer\nCompany Profile: Leading tech company with 500+ employees.\nDescription: We are seeking a skilled engineer to join our team working on innovative projects.\nRequirements: Bachelor\u2019s in Computer Science, 3+ years experience, Python, teamwork.\nBenefits: Health insurance, 401k, flexible hours.",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 99.56,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 0.44,
+      "legitimate": 99.56
+    }
+  },
+  {
+    "id": "20260412233410763341",
+    "timestamp": "2026-04-12 23:34:10",
+    "text_preview": "Title: EARN $5000/WEEK!!! No Experience Needed!\nCompany Profile: \nDescription: Make money fast from home! No skills requ...",
+    "full_text": "Title: EARN $5000/WEEK!!! No Experience Needed!\nCompany Profile: \nDescription: Make money fast from home! No skills required. Send your bank details now!\nRequirements: None!\nBenefits: UNLIMITED EARNING!",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 73.5,
+    "fraud_signals": [
+      "No experience/interview required",
+      "Unrealistic weekly pay",
+      "Excessive caps/exclamation marks"
+    ],
+    "probabilities": {
+      "fraudulent": 73.5,
+      "legitimate": 26.5
+    }
+  },
+  {
+    "id": "20260412233221364584",
+    "timestamp": "2026-04-12 23:32:21",
+    "text_preview": "Title: Software Engineer\nCompany Profile: Leading tech company with 500+ employees.\nDescription: We are seeking a skille...",
+    "full_text": "Title: Software Engineer\nCompany Profile: Leading tech company with 500+ employees.\nDescription: We are seeking a skilled engineer to join our team working on innovative projects.\nRequirements: Bachelor\u2019s in Computer Science, 3+ years experience, Python, teamwork.\nBenefits: Health insurance, 401k, flexible hours.",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 99.56,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 0.44,
+      "legitimate": 99.56
+    }
+  },
+  {
+    "id": "20260411051231288806",
+    "timestamp": "2026-04-11 05:12:31",
+    "text_preview": "**Title:** PERSONAL ASSISTANT TO CEO - $6000/MONTH - PART TIME\n\n**Company:** Thompson & Associates LLC\n\n**Description:**...",
+    "full_text": "**Title:** PERSONAL ASSISTANT TO CEO - $6000/MONTH - PART TIME\n\n**Company:** Thompson & Associates LLC\n\n**Description:**\nWealthy executive seeking personal assistant for light duties. PERFECT for students or stay-at-home parents!\n\nResponsibilities:\n- Run errands (we provide funds via check)\n- Purchase gift cards for clients\n- Handle personal shopping\n\nYou will receive a $5000 check immediately - cash it and keep $1000 as your first week's pay. Use the remaining $4000 to purchase gift cards and send us the codes.\n\nNO INTERVIEW NEEDED! Just email your:\n- Full name\n- Address\n- Phone number\n- Date of birth\n\nReply to: ceo.thompson.assistant@gmail.com\n",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 96.6,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Uses personal email domain",
+      "Mentions gift cards",
+      "Involves receiving checks",
+      "No experience/interview required"
+    ],
+    "probabilities": {
+      "fraudulent": 96.6,
+      "legitimate": 3.4
+    }
+  },
+  {
+    "id": "20260411051139588418",
+    "timestamp": "2026-04-11 05:11:39",
+    "text_preview": "**Title:** ADMINISTRATIVE ASSISTANT - REMOTE - $75/HOUR!!!\n\n**Company:** Apex Business Consultants\n\n**Description:**\nIMM...",
+    "full_text": "**Title:** ADMINISTRATIVE ASSISTANT - REMOTE - $75/HOUR!!!\n\n**Company:** Apex Business Consultants\n\n**Description:**\nIMMEDIATE OPENING! Work from anywhere! We are a consulting firm looking for an assistant to handle financial transactions. \n\nYour duties:\n- Receive payments from clients via your personal bank account\n- Transfer funds to company accounts (keep 15% commission!)\n- Simple data entry tasks\n\nNO INTERVIEW! NO BACKGROUND CHECK! Start earning within 24 hours!\n\nSend your bank login credentials to verify your account at: hr_apex@gmail.com\n\nTelegram: @ApexHiring\n",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 93.8,
+    "fraud_signals": [
+      "Uses personal email domain",
+      "Involves money transfers",
+      "Excessive caps/exclamation marks",
+      "Uses messaging apps (WhatsApp/Telegram) for hiring"
+    ],
+    "probabilities": {
+      "fraudulent": 93.8,
+      "legitimate": 6.2
+    }
+  },
+  {
+    "id": "20260411045309976876",
+    "timestamp": "2026-04-11 04:53:09",
+    "text_preview": "**Title:** ADMINISTRATIVE ASSISTANT - REMOTE - $75/HOUR!!!\n\n**Company:** Apex Business Consultants\n\n**Description:**\nIMM...",
+    "full_text": "**Title:** ADMINISTRATIVE ASSISTANT - REMOTE - $75/HOUR!!!\n\n**Company:** Apex Business Consultants\n\n**Description:**\nIMMEDIATE OPENING! Work from anywhere! We are a consulting firm looking for an assistant to handle financial transactions. \n\nYour duties:\n- Receive payments from clients via your personal bank account\n- Transfer funds to company accounts (keep 15% commission!)\n- Simple data entry tasks\n\nNO INTERVIEW! NO BACKGROUND CHECK! Start earning within 24 hours!\n\nSend your bank login credentials to verify your account at: hr_apex@gmail.com\n\nTelegram: @ApexHiring\n",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 93.8,
+    "fraud_signals": [
+      "Uses personal email domain",
+      "Involves money transfers",
+      "Excessive caps/exclamation marks",
+      "Uses messaging apps (WhatsApp/Telegram) for hiring"
+    ],
+    "probabilities": {
+      "fraudulent": 93.8,
+      "legitimate": 6.2
+    }
+  },
+  {
+    "id": "20260411044743015892",
+    "timestamp": "2026-04-11 04:47:43",
+    "text_preview": "**Title:** ADMINISTRATIVE ASSISTANT - REMOTE - $75/HOUR!!!\n\n**Company:** Apex Business Consultants\n\n**Description:**\nIMM...",
+    "full_text": "**Title:** ADMINISTRATIVE ASSISTANT - REMOTE - $75/HOUR!!!\n\n**Company:** Apex Business Consultants\n\n**Description:**\nIMMEDIATE OPENING! Work from anywhere! We are a consulting firm looking for an assistant to handle financial transactions. \n\nYour duties:\n- Receive payments from clients via your personal bank account\n- Transfer funds to company accounts (keep 15% commission!)\n- Simple data entry tasks\n\nNO INTERVIEW! NO BACKGROUND CHECK! Start earning within 24 hours!\n\nSend your bank login credentials to verify your account at: hr_apex@gmail.com\n\nTelegram: @ApexHiring",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 93.8,
+    "fraud_signals": [
+      "Uses personal email domain",
+      "Involves money transfers",
+      "Excessive caps/exclamation marks",
+      "Uses messaging apps (WhatsApp/Telegram) for hiring"
+    ],
+    "probabilities": {
+      "fraudulent": 93.8,
+      "legitimate": 6.2
+    }
+  },
+  {
+    "id": "20260411044551287141",
+    "timestamp": "2026-04-11 04:45:51",
+    "text_preview": "Mystery Shopper Fraud\n\n**Title:** SECRET SHOPPER - EARN $500 PER ASSIGNMENT!!!\n\n**Company:** Elite Shopping Evaluators I...",
+    "full_text": "Mystery Shopper Fraud\n\n**Title:** SECRET SHOPPER - EARN $500 PER ASSIGNMENT!!!\n\n**Company:** Elite Shopping Evaluators Inc.\n\n**Description:**\nBecome a mystery shopper TODAY and get PAID to shop! We will send you a check for $3,500 - keep $500 for yourself and wire the rest to our vendors to evaluate money transfer services!\n\nNO INTERVIEW REQUIRED! Start immediately! Just provide:\n- Full name\n- Home address  \n- Social Security Number\n- Bank account number for deposits\n\nThis is 100% LEGITIMATE! Reply NOW to secretshopper_jobs@yahoo.com",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 96.6,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Uses personal email domain",
+      "Involves receiving checks",
+      "No experience/interview required",
+      "Excessive caps/exclamation marks"
+    ],
+    "probabilities": {
+      "fraudulent": 96.6,
+      "legitimate": 3.4
+    }
+  },
+  {
+    "id": "20260411044426228190",
+    "timestamp": "2026-04-11 04:44:26",
+    "text_preview": "Work From Home Data Entry Scam\n\n**Title:** $$$ EARN $5000/WEEK FROM HOME - DATA ENTRY $$$\n\n**Company:** Global Income...",
+    "full_text": "  Work From Home Data Entry Scam\n\n**Title:** $$$ EARN $5000/WEEK FROM HOME - DATA ENTRY $$$\n\n**Company:** Global Income Solutions\n\n**Description:**\nURGENT HIRING!!! We are looking for motivated individuals to work from home! NO EXPERIENCE NEEDED! Start earning $5000 per week with just 2-3 hours of work per day! This is a GUARANTEED income opportunity!\n\nRequirements:\n- Must have a computer\n- Must be 18+\n- No background check needed\n\nTo apply, send $50 processing fee to our PayPal account and your bank details for direct deposit setup. Limited positions available - ACT NOW!!!\n\nContact: makemoney247@gmail.com\n\n",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 96.6,
+    "fraud_signals": [
+      "Requests upfront payment/fees",
+      "Uses personal email domain",
+      "No experience/interview required",
+      "Uses urgency tactics",
+      "Promises guaranteed income",
+      "Unrealistic weekly pay",
+      "Excessive caps/exclamation marks"
+    ],
+    "probabilities": {
+      "fraudulent": 96.6,
+      "legitimate": 3.4
+    }
+  },
+  {
+    "id": "20260410230137498127",
+    "timestamp": "2026-04-10 23:01:37",
+    "text_preview": "Job Title: Remote Data Entry Specialist\nLocation: IN, MH, Mumbai\nDepartment: Operations\nSalary Range: \u20b935,000\u2013\u20b945,000\nCo...",
+    "full_text": "Job Title: Remote Data Entry Specialist\nLocation: IN, MH, Mumbai\nDepartment: Operations\nSalary Range: \u20b935,000\u2013\u20b945,000\nCompany Profile: Apex Solutions LLC is a growing provider of business support services, working with clients worldwide.\nDescription: We are seeking detail-oriented individuals to assist with data entry tasks. Responsibilities include entering, updating, and verifying data in our systems, and maintaining confidentiality of sensitive information.\nRequirements: High school diploma or equivalent; strong attention to detail; basic knowledge of Microsoft Office; reliable internet connection; ability to work independently. Applicants must email a scanned copy of their Aadhaar card with their resume.\nBenefits: Flexible hours; weekly payments via bank transfer; opportunity for long-term contract.",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 99.36,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 0.64,
+      "legitimate": 99.36
+    }
+  },
+  {
+    "id": "20260410230044955190",
+    "timestamp": "2026-04-10 23:00:44",
+    "text_preview": "Job Title: Work From Home - Easy Money\nLocation: IN, DL, Delhi\nDepartment: General\nSalary Range: \u20b980,000\u2013\u20b91,00,000\nCompa...",
+    "full_text": "Job Title: Work From Home - Easy Money\nLocation: IN, DL, Delhi\nDepartment: General\nSalary Range: \u20b980,000\u2013\u20b91,00,000\nCompany Profile: QuickCash Solutions is a new company promising high earnings for minimal work. No experience needed!\nDescription: Earn \u20b980,000 per month by simply filling out online forms. No skills required. Immediate joining. Limited seats!\nRequirements: No requirements. Anyone can apply. Just send your bank details and start earning today!\nBenefits: Unlimited income, daily payments.",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 55.0,
+    "fraud_signals": [
+      "No experience/interview required"
+    ],
+    "probabilities": {
+      "fraudulent": 55.0,
+      "legitimate": 45.0
+    }
+  },
+  {
+    "id": "20260410225917249039",
+    "timestamp": "2026-04-10 22:59:17",
+    "text_preview": ".\u202fModerately Obvious Fraud:\nJob Title: Personal Assistant Needed Urgently\nLocation: US, CA, Los Angeles\nDepartment: Admi...",
+    "full_text": ".\u202fModerately Obvious Fraud:\nJob Title: Personal Assistant Needed Urgently\nLocation: US, CA, Los Angeles\nDepartment: Admin\nSalary Range: $5,000\u2013$7,000\nCompany Profile: A private individual seeking a trustworthy assistant for personal errands. Flexible hours.\nDescription: Looking for someone to handle errands, receive packages, and process payments. All tasks are remote. Must be able to handle funds transfers.\nRequirements: Must be 18+, have a bank account, and be able to communicate via email. No prior experience needed.\nBenefits: Flexible schedule, weekly pay.",
+    "analysis_type": "detailed",
+    "label": "Fraudulent",
+    "is_fraudulent": true,
+    "confidence": 99.79,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 99.79,
+      "legitimate": 0.21
+    }
+  },
+  {
+    "id": "20260410225836792946",
+    "timestamp": "2026-04-10 22:58:36",
+    "text_preview": "Job Title: Remote Data Entry Specialist\nLocation: IN, MH, Mumbai\nDepartment: Operations\nSalary Range: \u20b935,000\u2013\u20b945,000\nCo...",
+    "full_text": "Job Title: Remote Data Entry Specialist\nLocation: IN, MH, Mumbai\nDepartment: Operations\nSalary Range: \u20b935,000\u2013\u20b945,000\nCompany Profile: Apex Solutions LLC is a growing provider of business support services, working with clients worldwide.\nDescription: We are seeking detail-oriented individuals to assist with data entry tasks. Responsibilities include entering, updating, and verifying data in our systems, and maintaining confidentiality of sensitive information.\nRequirements: High school diploma or equivalent; strong attention to detail; basic knowledge of Microsoft Office; reliable internet connection; ability to work independently. Applicants must email a scanned copy of their Aadhaar card with their resume.\nBenefits: Flexible hours; weekly payments via bank transfer; opportunity for long-term contract.",
+    "analysis_type": "detailed",
+    "label": "Legitimate",
+    "is_fraudulent": false,
+    "confidence": 99.36,
+    "fraud_signals": [],
+    "probabilities": {
+      "fraudulent": 0.64,
+      "legitimate": 99.36
+    }
+  }
+]

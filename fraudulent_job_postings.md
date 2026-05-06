@@ -248,14 +248,17 @@ Email: surveys_unlimited@gmail.com
 
 1. **Unrealistic pay** - $5000/week for minimal work
 2. **No experience/interview required** - Legitimate jobs have screening
-3. **Upfront fees** - Real employers never ask you to pay
-4. **Personal/financial info requests** - SSN, bank details before hiring
-5. **Gmail/Yahoo/Hotmail emails** - Legitimate companies use corporate emails
-6. **Urgency tactics** - "ACT NOW", "LIMITED TIME", "URGENT"
-7. **Money handling** - Receiving/transferring funds is money laundering
-8. **Gift card purchases** - Classic scam technique
-9. **Vague company info** - No verifiable address or website
-10. **Too good to be true** - Guaranteed income, work from anywhere
+2. **No interview required / hiring without interview** - Fraud indicator: Scams often claim you can get hired without any interview. Legitimate jobs have a standard interview process as part of their screening.
+3. **Interview required / standard interview process** - Legitimate indicator: Real employers conduct interviews to assess candidates before hiring.
+4. **No experience required** - Can be a red flag if combined with other suspicious factors.
+5. **Upfront fees** - Real employers never ask you to pay
+6. **Personal/financial info requests** - SSN, bank details before hiring
+7. **Gmail/Yahoo/Hotmail emails** - Legitimate companies use corporate emails
+8. **Urgency tactics** - "ACT NOW", "LIMITED TIME", "URGENT"
+9. **Money handling** - Receiving/transferring funds is money laundering
+10. **Gift card purchases** - Classic scam technique
+11. **Vague company info** - No verifiable address or website
+12. **Too good to be true** - Guaranteed income, work from anywhere
 
 ---
 
